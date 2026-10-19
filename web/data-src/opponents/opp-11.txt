@@ -1,0 +1,173 @@
+Format inspected: (timestamp removed)
+
+CentAR October RTT
+Opponent 11
+Ultramar (Copy) (1,995 Points)
+
+Space Marines
+Ultramarines
+Assault Brethren, Ironstorm Spearhead, and Tacticus Firestorm Force (3 Detachment Points)
+Purge the Foe
+Strike Force (2,000 Points)
+
+ATTACHED UNITS
+
+Attached unit 1
+
+Captain Titus (115 Points)
+• Attached as: Leader (Character)
+• Warlord
+• 1x Bolt Pistol
+• 1x Master-crafted Bolter
+• 1x Master-crafted Chainsword
+
+Apothecary (65 Points)
+• Attached as: Support (Character)
+• 1x Absolvor Bolt Pistol
+• 1x Reductor Pistol
+• 1x Servo-armature
+• Enhancements: Imperium’s Sword
+
+Bladeguard Veteran Squad (180 Points)
+• Attached as: Bodyguard
+• 1x Bladeguard Veteran Sergeant
+◦ 1x Master-crafted Power Sword
+◦ 1x Plasma Pistol
+• 5x Bladeguard Veteran
+◦ 5x Heavy Bolt Pistol
+◦ 5x Master-crafted Power Sword
+
+Attached unit 2
+Lieutenant (50 Points)
+• Attached as: Support (Character)
+• 1x Ceramite Fists
+• 1x Master-crafted Power Weapon
+• 1x Neo-volkite Pistol
+• 1x Storm Shield
+
+Hellblaster Squad (230 Points)
+• Attached as: Bodyguard
+• 1x Hellblaster Sergeant
+◦ 1x Ceramite Fists
+◦ 1x Plasma Incinerator
+◦ 1x Plasma Pistol
+• 9x Hellblaster
+◦ 9x Bolt Pistol
+◦ 9x Ceramite Fists
+◦ 9x Plasma Incinerator
+
+Attached unit 3
+
+Ancient (55 Points)
+• Attached as: Support (Character)
+• 1x Bolt Pistol
+• 1x Bolt Rifle
+• 1x Ceramite Fists
+• Enhancements: Cyber-familiar
+
+Hellblaster Squad (230 Points)
+• Attached as: Bodyguard
+• 1x Hellblaster Sergeant
+◦ 1x Ceramite Fists
+◦ 1x Plasma Incinerator
+◦ 1x Plasma Pistol
+• 9x Hellblaster
+◦ 9x Bolt Pistol
+◦ 9x Ceramite Fists
+◦ 9x Plasma Incinerator
+
+BATTLELINE
+
+Intercessor Squad (85 Points)
+• 4x Intercessor
+◦ 4x Bolt Pistol
+◦ 4x Bolt Rifle
+◦ 1x Grenade Launcher
+◦ 4x Knives and Fists
+• 1x Intercessor Sergeant
+◦ 1x Bolt Pistol
+◦ 1x Bolt Rifle
+◦ 1x Chainsword
+
+OTHER DATASHEETS
+
+Eradicator Squad with melta rifles (100 Points)
+• 1x Eradicator Sergeant
+◦ 1x Bolt Pistol
+◦ 1x Ceramite Fists
+◦ 1x Melta Rifle
+• 2x Eradicator
+◦ 2x Bolt Pistol
+◦ 2x Ceramite Fists
+◦ 1x Melta Rifle
+◦ 1x Multi-melta
+
+Eradicator Squad with melta rifles (100 Points)
+• 1x Eradicator Sergeant
+◦ 1x Bolt Pistol
+◦ 1x Ceramite Fists
+◦ 1x Melta Rifle
+• 2x Eradicator
+◦ 2x Bolt Pistol
+◦ 2x Ceramite Fists
+◦ 1x Melta Rifle
+◦ 1x Multi-melta
+
+Gladiator Lancer (160 Points)
+• 1x Armoured Hull
+• 1x Defensive Array
+• 1x Laser Destroyer
+
+Gladiator Lancer (160 Points)
+• 1x Armoured Hull
+• 1x Defensive Array
+• 1x Laser Destroyer
+
+Land Speeder (105 Points)
+• 1x Armoured Impact
+• 1x Multi-melta
+• 1x Pyrecannon
+• 1x Stormfury Missile Launcher
+
+Scout Squad (65 Points)
+• 1x Scout Sergeant
+◦ 1x Bolt Pistol
+◦ 1x Boltgun
+◦ 1x Combat Knife
+• 4x Scout
+◦ 4x Bolt Pistol
+◦ 3x Boltgun
+◦ 4x Combat Knife
+◦ 1x Sniper Rifle
+
+Scout Squad (65 Points)
+• 1x Scout Sergeant
+◦ 1x Bolt Pistol
+◦ 1x Boltgun
+◦ 1x Combat Knife
+• 4x Scout
+◦ 4x Bolt Pistol
+◦ 3x Boltgun
+◦ 4x Combat Knife
+◦ 1x Sniper Rifle
+
+Vanguard Veteran Squad with Jump Packs (120 Points)
+• Enhancements: Furious Assault (Upgrade)
+• 1x Vanguard Veteran Sergeant
+◦ 1x Plasma pistol
+◦ 1x Relic Blade
+• 4x Vanguard Veteran
+◦ 3x Heavy Bolt Pistol
+◦ 4x Master-crafted Power Weapon
+◦ 1x Plasma pistol
+
+Vanguard Veteran Squad with Jump Packs (110 Points)
+• 1x Vanguard Veteran Sergeant
+◦ 1x Combat Shield
+◦ 1x Power Fist
+• 4x Vanguard Veteran
+◦ 4x Combat Shield
+◦ 4x Master-crafted Power Weapon
+Exported with App Version: v2.7.2 (2), Data Version: v972
+Uploaded with   Best Coast Pairings @CentAR October RTT @2026-10-09T02:48:26+00:00
+

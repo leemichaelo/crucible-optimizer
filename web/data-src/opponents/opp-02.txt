@@ -1,0 +1,126 @@
+Format inspected: (timestamp removed)
+
+CentAR October RTT
+Opponent 02
+idk (1985 points)
+
+Space Marines
+Dark Angels
+Inner Circle Task Force and Wrath of the Rock (3 Detachment Points)
+Priority Assets
+Strike Force (2000 points)
+
+Attached Units
+Attached Unit 1
+
+Azrael (150 points)
+• Attached as: Leader (Character)
+• 1x Lion's Wrath
+1x The Lion Helm
+1x The Sword of Secrets
+
+Hellblaster Squad (230 points)
+• Attached as: Bodyguard
+• 1x Hellblaster Sergeant
+• 1x Ceramite Fists
+1x Plasma Incinerator
+1x Plasma Pistol
+• 9x Hellblaster
+• 9x Bolt Pistol
+9x Ceramite Fists
+9x Plasma Incinerator
+
+Attached Unit 2
+
+Ravenwing Command Squad (115 points)
+• Attached as: Support
+• 1x Ravenwing Apothecary
+• 1x Bolt Pistol
+1x Corvus Hammers
+1x Plasma Talon
+• 1x Ravenwing Champion
+• 1x Bolt Pistol
+1x Master-crafted Power Weapon
+1x Plasma Talon
+• 1x Ravenwing Ancient
+• 1x Bolt Pistol
+1x Corvus Hammers
+1x Plasma Talon
+
+Ravenwing Black Knights (85 points)
+• Attached as: Bodyguard
+• 1x Ravenwing Huntmaster
+• 1x Bolt Pistol
+1x Corvus Hammers
+1x Plasma Talon
+• 2x Ravenwing Black Knight
+• 2x Bolt Pistol
+2x Corvus Hammers
+2x Plasma Talon
+
+CHARACTERS
+
+Lion El'Jonson (415 points)
+• Warlord
+• 1x Arma Luminis
+1x Fealty
+
+OTHER DATASHEETS
+
+Deathwing Knights (255 points)
+• 1x Watcher in the Dark
+• 4x Deathwing Knights
+• 4x Mace of Absolution
+• 1x Knight Master
+• 1x Great Weapon of the Unforgiven
+
+Deathwing Knights (255 points)
+• 1x Watcher in the Dark
+• 4x Deathwing Knights
+• 4x Mace of Absolution
+• 1x Knight Master
+• 1x Great Weapon of the Unforgiven
+Land Speeder (105 points)
+• 1x Armoured Impact
+1x Multi-melta
+1x Onslaught Gatling Cannon
+1x Stormfury Missile Launcher
+
+Land Speeder (105 points)
+• 1x Armoured Impact
+1x Multi-melta
+1x Onslaught Gatling Cannon
+1x Stormfury Missile Launcher
+
+Scout Squad (65 points)
+• 1x Scout Sergeant
+• 1x Bolt Pistol
+1x Boltgun
+1x Combat Knife
+• 4x Scout
+• 4x Bolt Pistol
+2x Boltgun
+4x Combat Knife
+1x Missile Launcher
+1x Sniper Rifle
+
+Scout Squad (65 points)
+• 1x Scout Sergeant
+• 1x Bolt Pistol
+1x Boltgun
+1x Combat Knife
+• 4x Scout
+• 4x Bolt Pistol
+2x Boltgun
+4x Combat Knife
+1x Missile Launcher
+1x Sniper Rifle
+
+Storm Speeder Thunderstrike (140 points)
+• 1x Armoured Impact
+1x Stormfury Missile Launcher
+1x Thunderstrike Icarus Rocket Pod
+1x Thunderstrike Las-talon
+Exported with App Version: v2.7.1 (146), Data Version: v972
+Uploaded with   Best Coast Pairings @CentAR October RTT @2026-10-09T03:15:43+00:00
+

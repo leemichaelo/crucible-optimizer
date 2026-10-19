@@ -1,0 +1,109 @@
+Format inspected: (timestamp removed)
+
+CentAR October RTT
+Opponent 06
+blunt force change (1985 points)
+
+World Eaters
+Berzerker Warband and Brazen Engines (3 Detachment Points)
+Purge the Foe
+Strike Force (2000 points)
+
+Attached Units
+Attached Unit 1
+
+Slaughterbound (90 points)
+• Attached as: Leader (Character)
+• 1x Lacerator and daemonic claw
+
+Exalted Eightbound (130 points)
+• Attached as: Bodyguard
+• 1x Exalted Eightbound Champion
+• 1x Chainblades
+• 2x Exalted Eightbound
+• 2x Chainblades
+
+Attached Unit 2
+
+Master of Executions (60 points)
+• Attached as: Leader (Character)
+• 1x Axe of dismemberment
+1x Bolt pistol
+
+Khorne Berzerkers (170 points)
+• Attached as: Bodyguard (Battleline)
+• 1x Khorne Berzerker Champion
+• 1x Chainblade
+1x Plasma pistol
+• 9x Khorne Berzerker
+• 7x Bolt pistol
+7x Chainblade
+1x Icon of Khorne
+2x Khornate eviscerator
+2x Plasma pistol
+
+CHARACTERS
+
+Angron (330 points)
+• Warlord
+• 1x Samni’arius and Spinegrinder
+
+BATTLELINE
+
+Khorne Berzerkers (170 points)
+• 1x Khorne Berzerker Champion
+• 1x Chainblade
+1x Plasma pistol
+• 9x Khorne Berzerker
+• 7x Bolt pistol
+7x Chainblade
+1x Icon of Khorne
+2x Khornate eviscerator
+2x Plasma pistol
+
+OTHER DATASHEETS
+
+Defiler (270 points)
+• 1x Ectoplasma destructor
+1x Electroscourge
+2x Excruciator cannon
+1x Heavy baleflamer
+1x Shearing claws
+
+Eightbound (125 points)
+• 1x Eightbound Champion
+• 1x Chainblades
+• 2x Eightbound
+• 2x Chainblades
+
+Eightbound (125 points)
+• 1x Eightbound Champion
+• 1x Chainblades
+• 2x Eightbound
+• 2x Chainblades
+
+Forgefiend (155 points)
+• 3x Ectoplasma cannon
+1x Forgefiend claws
+
+Forgefiend (155 points)
+• 3x Ectoplasma cannon
+1x Forgefiend claws
+
+Jakhals (65 points)
+• 1x Jakhal Pack Leader
+• 1x Autopistol
+1x Chainblades
+• 1x Dishonoured
+• 1x Skullsmasher and mangler
+• 8x Jakhal
+• 8x Autopistol
+8x Chainblades
+
+Maulerfiend (140 points)
+• 1x Lasher tendrils
+1x Maulerfiend fists
+
+Exported with App Version: v2.7.1 (146), Data Version: v972
+Uploaded with   Best Coast Pairings @CentAR October RTT @2026-10-09T02:30:44+00:00
+

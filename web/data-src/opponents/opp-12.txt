@@ -1,0 +1,146 @@
+Format inspected: (timestamp removed)
+
+CentAR October RTT
+Opponent 12
+We really did just come full circle back to this (1995 points)
+
+Aeldari
+Aspect Host (3 Detachment Points)
+Priority Assets
+Strike Force (2000 points)
+
+Attached Units
+Attached Unit 1
+
+Fuegan (130 points)
+• Attached as: Leader (Character)
+• 1x Fire Axe
+1x Searsong
+
+Fire Dragons (110 points)
+• Attached as: Bodyguard
+• 1x Aspect Shrine Token
+• 1x Fire Dragon Exarch
+• 1x Close combat weapon
+1x Dragon axe
+1x Dragon fusion pistol
+• 4x Fire Dragon
+• 4x Close combat weapon
+4x Dragon fusion gun
+
+Attached Unit 2
+
+Autarch (90 points)
+• Attached as: Leader (Character)
+• 1x Dragon fusion gun
+1x Star glaive
+• Enhancement: Mantle of Wisdom
+
+Howling Banshees (165 points)
+• Attached as: Bodyguard
+• 2x Aspect Shrine Token
+• 1x Howling Banshee Exarch
+• 1x Executioner
+1x Shuriken pistol
+• 9x Howling Banshee
+• 9x Banshee blade
+9x Shuriken pistol
+
+Attached Unit 3
+
+Autarch (85 points)
+• Attached as: Leader (Character)
+• 1x Dragon fusion gun
+1x Star glaive
+• Enhancement: Aspect of Murder
+
+Howling Banshees (165 points)
+• Attached as: Bodyguard
+• 2x Aspect Shrine Token
+• 1x Howling Banshee Exarch
+• 1x Executioner
+1x Shuriken pistol
+• 9x Howling Banshee
+• 9x Banshee blade
+9x Shuriken pistol
+
+Attached Unit 4
+
+Jain Zar (105 points)
+• Attached as: Leader (Character)
+• 1x Blade of Destruction
+1x Silent Death
+
+Howling Banshees (85 points)
+• Attached as: Bodyguard
+• 1x Aspect Shrine Token
+• 1x Howling Banshee Exarch
+• 1x Executioner
+1x Shuriken pistol
+• 4x Howling Banshee
+• 4x Banshee blade
+4x Shuriken pistol
+CHARACTERS
+
+Avatar of Khaine (250 points)
+• Warlord
+• 1x The Wailing Doom
+
+Eldrad Ulthran (120 points)
+• 1x Mind War
+1x Shuriken pistol
+1x The Staff of Ulthamar and witchblade
+
+DEDICATED TRANSPORTS
+
+Wave Serpent (115 points)
+• 1x Shuriken cannon
+1x Twin bright lance
+1x Wraithbone hull
+
+OTHER DATASHEETS
+
+Fire Dragons (110 points)
+• 1x Aspect Shrine Token
+• 1x Fire Dragon Exarch
+• 1x Close combat weapon
+1x Firepike
+• 4x Fire Dragon
+• 4x Close combat weapon
+4x Dragon fusion gun
+
+Fire Dragons (120 points)
+• 1x Aspect Shrine Token
+• 1x Fire Dragon Exarch
+• 1x Close combat weapon
+1x Firepike
+• 4x Fire Dragon
+• 4x Close combat weapon
+4x Dragon fusion gun
+
+Shining Spears (100 points)
+• 1x Shining Spear Exarch
+• 1x Shimmershield
+1x Shuriken cannon
+1x Star lance
+• 2x Shining Spear
+• 2x Laser lance
+2x Twin shuriken catapult
+
+Shining Spears (100 points)
+• 1x Shining Spear Exarch
+• 1x Shimmershield
+1x Shuriken cannon
+1x Star lance
+• 2x Shining Spear
+• 2x Laser lance
+2x Twin shuriken catapult
+
+Wraithguard (145 points)
+• 5x Wraithguard
+• 5x Close combat weapon
+5x D-scythe
+
+Exported with App Version: v2.7.1 (146), Data Version: v972
+Uploaded with   Best Coast Pairings @CentAR October RTT @2026-10-09T02:33:52+00:00
+

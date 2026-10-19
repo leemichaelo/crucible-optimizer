@@ -1,0 +1,155 @@
+Format inspected: (timestamp removed)
+
+CentAR October RTT
+Opponent 01
+Lso CoC (Copy) B (2,000 Points)
+
+Death Guard
+Champions of Contagion and Paragons of Putrescence (3 Detachment Points)
+Priority Assets
+Strike Force (2,000 Points)
+
+ATTACHED UNITS
+
+Attached unit 1
+
+Lord of Contagion (110 Points)
+• Attached as: Leader (Character)
+• 1x Manreaper
+
+Deathshroud Terminators (150 Points)
+• Attached as: Bodyguard
+• 1x Deathshroud Champion
+◦ 1x Icon of Despair (Aura)
+◦ 1x Manreaper
+◦ 2x Plaguespurt gauntlet
+• 2x Deathshroud Terminator
+◦ 2x Manreaper
+◦ 2x Plaguespurt gauntlet
+
+Attached unit 2
+
+Lord of Contagion (110 Points)
+• Attached as: Leader (Character)
+• 1x Manreaper
+
+Deathshroud Terminators (150 Points)
+• Attached as: Bodyguard
+• 1x Deathshroud Champion
+◦ 1x Icon of Despair (Aura)
+◦ 1x Manreaper
+◦ 2x Plaguespurt gauntlet
+• 2x Deathshroud Terminator
+◦ 2x Manreaper
+◦ 2x Plaguespurt gauntlet
+
+Attached unit 3
+
+Malignant Plaguecaster (80 Points)
+• Attached as: Leader (Character)
+• 1x Bolt pistol
+• 1x Corrupted staff
+• 1x Plague Wind
+• Enhancements: Rejuvenating Swarm
+
+Biologus Putrifier (60 Points)
+• Attached as: Leader (Character)
+• 1x Hyper blight grenades
+• 1x Injector pistol
+• 1x Plague knives
+
+Plague Marines (175 Points)
+• Attached as: Bodyguard (Battleline)
+• 1x Plague Champion
+◦ 1x Plasma gun
+◦ 1x Power fist
+• 9x Plague Marine
+◦ 2x Blight launcher
+◦ 3x Heavy plague weapon
+◦ 9x Plague knives
+◦ 2x Plague spewer
+◦ 2x Plasma gun
+
+Attached unit 4
+
+Plague Surgeon (75 Points)
+• Attached as: Leader (Character)
+• 1x Balesword
+• 1x Bolt pistol
+• Enhancements: Needle of Nurgle
+
+Icon Bearer (45 Points)
+• Attached as: Leader (Character)
+• 1x Boltgun
+• 1x Plague knife
+Plague Marines (90 Points)
+• Attached as: Bodyguard (Battleline)
+• 1x Plague Champion
+◦ 1x Plasma pistol
+◦ 1x Power fist
+• 4x Plague Marine
+◦ 2x Bubotic weapons
+◦ 2x Heavy plague weapon
+◦ 4x Plague knives
+
+CHARACTERS
+
+Tallyman (60 Points)
+• 1x Close combat weapon
+• 1x Plasma pistol
+
+Typhus (90 Points)
+• Warlord
+• 1x Lakrimae
+
+DEDICATED TRANSPORTS
+
+Chaos Rhino (75 Points)
+• 1x Armoured tracks
+• 1x Combi-bolter
+• 1x Havoc launcher
+
+Chaos Rhino (75 Points)
+• 1x Armoured tracks
+• 1x Combi-bolter
+• 1x Havoc launcher
+
+OTHER DATASHEETS
+
+Chaos Spawn (80 Points)
+• 2x Chaos Spawn
+◦ 2x Hideous mutations
+
+Foetid Bloat-Drone (100 Points)
+• 1x Plague probe
+• 2x Plaguespitter
+
+Foetid Bloat-Drone with Heavy Blight Launcher (125 Points)
+• 1x Heavy blight launcher
+• 1x Plague probe
+
+Myphitic Blight-haulers (95 Points)
+• 1x Bile spurt
+• 1x Gnashing maw
+• 1x Missile launcher
+• 1x Multi-melta
+
+Myphitic Blight-haulers (95 Points)
+• 1x Bile spurt
+• 1x Gnashing maw
+• 1x Missile launcher
+• 1x Multi-melta
+
+Myphitic Blight-haulers (95 Points)
+• 1x Bile spurt
+• 1x Gnashing maw
+• 1x Missile launcher
+• 1x Multi-melta
+
+Poxwalkers (65 Points)
+• 10x Poxwalker
+◦ 10x Improvised weapon
+
+Exported with App Version: v2.7.2 (2), Data Version: v972
+Uploaded with   Best Coast Pairings @CentAR October RTT @2026-10-09T00:40:55+00:00
+

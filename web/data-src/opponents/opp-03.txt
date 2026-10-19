@@ -1,0 +1,75 @@
+Format inspected: (timestamp removed)
+
+CentAR October RTT
+Opponent 03
+Take And Hold (1990 points)
+
+Tyranids
+Assimilation Swarm and Talons of the Norn Queen (3 Detachment Points)
+Take and Hold
+Strike Force (2000 points)
+
+CHARACTERS
+
+Neurotyrant (130 points)
+• 1x Neurotyrant claws and lashes
+1x Psychic scream
+• Enhancement: Biophagic Flow (Aura)
+
+The Red Terror (120 points)
+• Warlord
+• 1x Gaping maw
+1x Scything talons
+
+OTHER DATASHEETS
+
+Biovores (60 points)
+• 1x Chitin-barbed limbs
+1x Spore Mine launcher
+
+Norn Assimilator (280 points)
+• 1x Monstrous scything talons
+1x Toxinjector Harpoon
+• Enhancement: Synaptoprescience (Upgrade)
+
+Norn Assimilator (300 points)
+• 1x Monstrous scything talons
+1x Toxinjector Harpoon
+• Enhancement: Synaptoprescience (Upgrade)
+Norn Emissary (250 points)
+• 1x Monstrous rending claws
+1x Monstrous scything talons
+1x Psychic Tendril
+
+Norn Emissary (270 points)
+• 1x Monstrous rending claws
+1x Monstrous scything talons
+1x Psychic Tendril
+
+Psychophage (110 points)
+• 1x Psychoclastic torrent
+1x Talons and betentacled maw
+
+Psychophage (110 points)
+• 1x Psychoclastic torrent
+1x Talons and betentacled maw
+
+Screamer-Killer (125 points)
+• 1x Bio-plasmic scream
+1x Screamer-Killer talons
+
+Screamer-Killer (125 points)
+• 1x Bio-plasmic scream
+1x Screamer-Killer talons
+
+Von Ryan’s Leapers (55 points)
+• 3x Von Ryan’s Leaper
+• 3x Leaper’s talons
+
+Von Ryan’s Leapers (55 points)
+• 3x Von Ryan’s Leaper
+• 3x Leaper’s talons
+
+Exported with App Version: v2.7.1 (146), Data Version: v972
+Uploaded with   Best Coast Pairings @CentAR October RTT @2026-10-08T01:34:24+00:00
+

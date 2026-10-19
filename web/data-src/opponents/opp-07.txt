@@ -1,0 +1,120 @@
+Format inspected: (timestamp removed)
+
+CentAR October RTT
+Opponent 07
+Orks v1 (1,995 Points)
+
+Orks
+Bully Boyz, Runt Swarm, and Wreckas (3 Detachment Points)
+Priority Assets
+Strike Force (2,000 Points)
+
+ATTACHED UNITS
+
+Attached unit 1
+
+Nazdreg (165 Points)
+• Attached as: Leader (Character)
+• Warlord
+• 1x Kustom Blasta X
+• 1x Moonchewa
+
+Meganobz (200 Points)
+• Attached as: Bodyguard
+• 5x Meganob
+◦ 5x Killsaw
+◦ 5x Kombi-weapon
+
+Attached unit 2
+
+Big Mek in Mega Armour (90 Points)
+• Attached as: Leader (Character)
+• 1x Kustom Mega-blasta
+• 1x Power Klaw
+• 1x KFF
+
+Meganobz (200 Points)
+• Attached as: Bodyguard
+• 5x Meganob
+◦ 5x Twin Killsaws
+Attached unit 3
+
+Big Mek in Mega Armour (90 Points)
+• Attached as: Leader (Character)
+• 1x Kustom Mega-blasta
+• 1x Power Klaw
+• 1x Tellyport Blasta
+
+Meganobz (240 Points)
+• Attached as: Bodyguard
+• 5x Meganob
+◦ 5x Twin Killsaws
+
+Attached unit 4
+
+Big Mek with Shokk Attack Gun (110 Points)
+• Attached as: Leader (Character)
+• 1x Big Mek’s Toolz
+• 1x Shokk Attack Gun
+
+Tankbustas (160 Points)
+• Attached as: Bodyguard
+• 5x Tankbusta
+◦ 6x Busta Rokkit Launcha
+◦ 5x Gitstikka
+◦ 1x Pulsa Rokkit (Once per battle, per unit)
+• 1x Nob
+◦ 1x Choppa
+◦ 1x Rokkit Pistol
+◦ 1x Smash Hammer
+
+Attached unit 5
+
+Big Mek with Shokk Attack Gun (125 Points)
+• Attached as: Leader (Character)
+• 1x Big Mek’s Toolz
+• 1x Shokk Attack Gun
+
+Tankbustas (160 Points)
+• Attached as: Bodyguard
+• 5x Tankbusta
+◦ 6x Busta Rokkit Launcha
+◦ 5x Gitstikka
+◦ 1x Pulsa Rokkit (Once per battle, per unit)
+• 1x Nob
+◦ 1x Choppa
+◦ 1x Rokkit Pistol
+◦ 1x Smash Hammer
+
+CHARACTERS
+
+Big Mek Dakkarig (160 Points)
+• 1x Blitzkannon
+• 1x Multi-busta Launcha
+• 1x Stompy Feet
+
+Big Mek Dakkarig (160 Points)
+• 1x Blitzkannon
+• 1x Multi-busta Launcha
+• 1x Stompy Feet
+
+BATTLELINE
+
+Gretchin (45 Points)
+• 10x Gretchin
+◦ 10x Grot Blasta
+◦ 10x Scavenged Shivs
+
+Gretchin (45 Points)
+• 10x Gretchin
+◦ 10x Grot Blasta
+◦ 10x Scavenged Shivs
+
+Gretchin (45 Points)
+• 10x Gretchin
+◦ 10x Grot Blasta
+◦ 10x Scavenged Shivs
+
+Exported with App Version: v2.7.2 (2), Data Version: v972
+Uploaded with   Best Coast Pairings @CentAR October RTT @2026-10-10T14:18:08+00:00
+

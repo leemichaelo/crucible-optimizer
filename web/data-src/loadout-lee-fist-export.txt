@@ -1,0 +1,126 @@
+2000 - Fist of the God Emperor (2020 points)
+
+Space Marines
+Black Templars
+Fist of the God-Emperor and Vow-sworn Crusaders (3 Detachment Points)
+Purge the Foe
+Strike Force (2000 points)
+
+Attached Units
+Attached Unit 1
+
+High Marshal Helbrecht (125 points)
+• Attached as: Leader (Character)
+  • Warlord
+  • 1x Ferocity
+    1x Sword of the High Marshals
+
+Sword Brethren Squad (115 points)
+• Attached as: Bodyguard
+  • 4x Sword Brother
+    • 3x Heavy Bolt Pistol
+      3x Master-crafted Power Weapon
+      1x Plasma Pistol
+      1x Thunder Hammer
+
+Attached Unit 2
+
+Castellan (100 points)
+• Attached as: Support (Character)
+  • 1x Combi-weapon
+    1x Master-crafted Power Weapon
+  • Enhancement: Zealous Vanguard
+
+Crusader Squad (305 points)
+• Attached as: Bodyguard (Battleline)
+  • 1x Sword Brother
+    • 1x Heavy Bolt Pistol
+      1x Master-crafted Power Weapon
+  • 11x Initiate
+    • 11x Bolt Pistol
+      11x Close combat weapon
+      11x Heavy Bolt Pistol
+      7x Initiate Chainsword
+      4x Power Fist
+  • 8x Neophyte
+    • 8x Combat Knife
+      8x Shotgun
+
+Attached Unit 3
+
+Chaplain Grimaldus (120 points)
+• Attached as: Leader (Character)
+  • 3x Cenobyte Servitor
+    • 3x Close combat weapon
+  • 1x Chaplain Grimaldus
+    • 1x Artificer crozius
+      1x Plasma Pistol
+
+Crusade Ancient (65 points)
+• Attached as: Support (Character)
+  • 1x Bolt Pistol
+    1x Master-crafted Power Weapon
+  • Enhancement: Consecrating Aura
+
+Crusader Squad (305 points)
+• Attached as: Bodyguard (Battleline)
+  • 1x Sword Brother
+    • 1x Heavy Bolt Pistol
+      1x Master-crafted Power Weapon
+  • 11x Initiate
+    • 11x Bolt Pistol
+      11x Close combat weapon
+      11x Heavy Bolt Pistol
+      7x Initiate Chainsword
+      4x Power Fist
+  • 8x Neophyte
+    • 8x Combat Knife
+      8x Shotgun
+
+
+CHARACTERS
+
+Emperor's Champion (100 points)
+  • 1x Black Sword
+    1x Bolt Pistol
+
+
+DEDICATED TRANSPORTS
+
+Impulsor (90 points)
+  • 1x Armoured Hull
+    1x Multi-melta
+    1x Orbital Comms Array
+    1x Storm Bolters
+
+
+OTHER DATASHEETS
+
+Ballistus Dreadnought (150 points)
+  • 1x Armoured Feet
+    1x Ballistus Lascannon
+    1x Ballistus Missile Launcher
+    1x Storm Bolters
+
+Brutalis Dreadnought (160 points)
+  • 1x Brutalis Talons
+    1x Twin Icarus Ironhail Heavy Stubber
+    1x Twin Multi-melta
+
+Repulsor Executioner (275 points)
+  • 1x Armoured Hull
+    1x Defensive Array
+    1x Heavy Laser Destroyer
+    1x Heavy Onslaught Gatling Cannon
+    1x Multi-melta
+    1x Twin Heavy Bolter
+
+Vanguard Veteran Squad with Jump Packs (110 points)
+  • 1x Vanguard Veteran Sergeant
+    • 1x Heavy Bolt Pistol
+      1x Relic Blade
+  • 4x Vanguard Veteran
+    • 4x Heavy Bolt Pistol
+      4x Master-crafted Power Weapon
+
+Exported with App Version: v2.8.0 (148), Data Version: v981

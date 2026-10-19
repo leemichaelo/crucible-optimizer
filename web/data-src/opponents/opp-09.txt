@@ -1,0 +1,78 @@
+Format inspected: (timestamp removed)
+
+CentAR October RTT
+Opponent 09
+Sergeant Be'lakor's Murder Birds Club Band (1995 points)
+
+Chaos Daemons
+Scintillating Legion and Warptide (3 Detachment Points)
+Priority Assets
+Strike Force (2000 points)
+
+CHARACTERS
+
+Be’lakor (390 points)
+• Warlord
+• 1x Betraying Shades
+1x The Blade of Shadows
+
+Daemon Prince of Chaos (190 points)
+• Daemonic Allegiance: Tzeentch
+• 1x Hellforged weapons
+1x Infernal cannon
+• Enhancement: Neverblade
+
+Kairos Fateweaver (305 points)
+• 1x Infernal Gateway
+1x Staff of Tomorrow
+
+Lord of Change (340 points)
+• 1x Bolt of Change
+1x Rod of sorcery
+1x Staff of Tzeentch
+• Enhancement: Infernal Puppeteer
+
+Lord of Change (350 points)
+• 1x Bolt of Change
+1x Rod of sorcery
+1x Staff of Tzeentch
+• Enhancement: Improbable Shield (Aura)
+BATTLELINE
+
+Plaguebearers (130 points)
+• Enhancement: Bane-forged Weapons (Upgrade)
+• 1x Plagueridden
+• 1x Plaguesword
+• 9x Plaguebearer
+• 1x Daemonic Icon
+1x Instrument of Chaos
+9x Plaguesword
+
+OTHER DATASHEETS
+
+Flamers (65 points)
+• 1x Pyrocaster
+• 1x Flamer mouths
+1x Flickering flames
+• 2x Flamer
+• 2x Flamer mouths
+2x Flickering flames
+
+Flamers (65 points)
+• 1x Pyrocaster
+• 1x Flamer mouths
+1x Flickering flames
+• 2x Flamer
+• 2x Flamer mouths
+2x Flickering flames
+
+Screamers (80 points)
+• 3x Screamer
+• 3x Lamprey bite
+
+Screamers (80 points)
+• 3x Screamer
+• 3x Lamprey bite
+
+Exported with App Version: v2.7.1 (146), Data Version: v972
+Uploaded with   Best Coast Pairings @CentAR October RTT @2026-10-07T18:37:40+00:00

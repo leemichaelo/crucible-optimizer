@@ -1,0 +1,117 @@
+Format inspected: (timestamp removed)
+
+CentAR October RTT
+Opponent 13
+Dads Home (1,995 Points)
+
+Space Marines
+Dark Angels
+Assault Brethren, Stormlance Task Force, and Terminator Storm Force (3 Detachment Points)
+Take and Hold
+Strike Force (2,000 Points)
+
+ATTACHED UNITS
+
+Attached unit 1
+
+Sammael (120 Points)
+• Attached as: Leader (Character)
+• 1x Bolt Pistol
+• 1x Master-crafted Plasma Cannon
+• 1x The Raven Sword
+• 1x Twin Storm Bolter
+
+Ravenwing Command Squad (115 Points)
+• Attached as: Support
+• 1x Ravenwing Apothecary
+◦ 1x Bolt Pistol
+◦ 1x Corvus Hammers
+◦ 1x Plasma Talon
+• 1x Ravenwing Champion
+◦ 1x Bolt Pistol
+◦ 1x Master-crafted Power Weapon
+◦ 1x Plasma Talon
+• 1x Ravenwing Ancient
+◦ 1x Bolt Pistol
+◦ 1x Corvus Hammers
+◦ 1x Plasma Talon
+
+Outrider Squad (170 Points)
+• Attached as: Bodyguard
+• Enhancements: Supercharged Engines (Upgrade)
+• 5x Outrider
+◦ 5x Chainsword
+◦ 5x Heavy Bolt Pistol
+◦ 5x Twin Bolt Rifle
+• 1x Outrider Sergeant
+◦ 1x Plasma Pistol
+◦ 1x Thunder Hammer
+◦ 1x Twin Bolt Rifle
+
+Attached unit 2
+
+Ancient in Terminator Armour (100 Points)
+• Attached as: Support (Character)
+• 1x Master-crafted Power Weapon
+• 1x Storm Bolter
+• Enhancements: Corporeum Reliquary
+
+Terminator Assault Squad (365 Points)
+• Attached as: Bodyguard
+• 1x Terminator Sergeant
+◦ 1x Storm Shield
+◦ 1x Thunder Hammer
+• 9x Terminator
+◦ 4x Storm Shield
+◦ 4x Thunder Hammer
+◦ 5x Twin Lightning Claws
+
+CHARACTERS
+
+Lion El'Jonson (415 Points)
+• Warlord
+• 1x Arma Luminis
+• 1x Fealty
+
+OTHER DATASHEETS
+
+Ravenwing Black Knights (170 Points)
+• 1x Ravenwing Huntmaster
+◦ 1x Bolt Pistol
+◦ 1x Corvus Hammers
+◦ 1x Plasma Talon
+• 5x Ravenwing Black Knight
+◦ 5x Bolt Pistol
+◦ 5x Corvus Hammers
+◦ 5x Plasma Talon
+
+Ravenwing Black Knights (170 Points)
+• 1x Ravenwing Huntmaster
+◦ 1x Bolt Pistol
+◦ 1x Corvus Hammers
+◦ 1x Plasma Talon
+• 5x Ravenwing Black Knight
+◦ 5x Bolt Pistol
+◦ 5x Corvus Hammers
+◦ 5x Plasma Talon
+
+Ravenwing Darkshroud (90 Points)
+• 1x Armoured Hull
+• 1x Assault Cannon
+• Enhancements: Auspex Triangulation Shrines (Upgrade)
+
+Storm Speeder Thunderstrike (140 Points)
+• 1x Armoured Impact
+• 1x Stormfury Missile Launcher
+• 1x Thunderstrike Icarus Rocket Pod
+• 1x Thunderstrike Las-talon
+
+Storm Speeder Thunderstrike (140 Points)
+• 1x Armoured Impact
+• 1x Stormfury Missile Launcher
+• 1x Thunderstrike Icarus Rocket Pod
+• 1x Thunderstrike Las-talon
+
+Exported with App Version: v2.7.2 (2), Data Version: v972
+Uploaded with   Best Coast Pairings @CentAR October RTT @2026-10-08T23:29:44+00:00
+

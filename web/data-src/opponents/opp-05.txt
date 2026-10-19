@@ -1,0 +1,121 @@
+Format inspected: (timestamp removed)
+
+CentAR October RTT
+Opponent 05
+Orks Beat the Basics back (2,000 Points)
+
+Orks
+Blitz Brigade, Brute Bosses, and Da Big Hunt (3 Detachment Points)
+Take and Hold
+Strike Force (2,000 Points)
+
+ATTACHED UNITS
+
+Attached unit 1
+
+Beastboss (115 Points)
+• Attached as: Leader (Character)
+• 1x Beast Snagga Klaw and Beastchoppa
+• 1x Shoota
+• Enhancements: Brutal But Kunnin’
+
+Beast Snagga Boyz (80 Points)
+• Attached as: Bodyguard (Battleline)
+• 9x Beast Snagga Boy
+◦ 9x Choppa
+◦ 9x Slugga
+• 1x Nob
+◦ 1x Power Snappa
+◦ 1x Slugga
+
+Attached unit 2
+
+Runtherd (10 Points)
+• Attached as: Support (Character)
+• 1x Runtherd’s Toolz
+• 1x Slugga
+
+Gretchin (45 Points)
+• Attached as: Bodyguard
+• 10x Gretchin
+◦ 10x Grot Blasta
+◦ 10x Scavenged Shivs
+
+Attached unit 3
+
+Nazdreg (165 Points)
+• Attached as: Leader (Character)
+• 1x Kustom Blasta X
+• 1x Moonchewa
+
+Meganobz (240 Points)
+• Attached as: Bodyguard
+• 6x Meganob
+◦ 6x Twin Killsaws
+
+Attached unit 4
+
+Mek (55 Points)
+• Attached as: Support (Character)
+• 1x Kustom Mega-slugga
+• 1x Mek’s Toolz
+
+Tankbustas (160 Points)
+• Attached as: Bodyguard
+• 5x Tankbusta
+◦ 5x Busta Rokkit Launcha
+◦ 5x Gitstikka
+• 1x Nob
+◦ 1x Choppa
+◦ 2x Rokkit Pistol
+
+CHARACTERS
+
+Big Mek with Shokk Attack Gun (110 Points)
+• 1x Big Mek’s Toolz
+• 1x Shokk Attack Gun
+
+Ghazghkull Thraka (290 Points)
+• Warlord
+• 1x Adamantine ’Eadbutt
+• 1x Gork’s Klaw
+• 1x Mork’s Roar
+
+Mozrog Skragbad (170 Points)
+• 1x Big Chompa’s Jaws
+• 1x Gutrippa
+• 1x Thump Gun
+
+Warboss (100 Points)
+• 1x Kombi-rokkit
+• 1x Power Klaw
+
+OTHER DATASHEETS
+
+Battlewagon (185 Points)
+• 4x Big Shoota
+• 1x Crushin’ Bulk
+• Enhancements: Targetin’ Gizmos (Upgrade)
+
+Gretchin (45 Points)
+• 10x Gretchin
+◦ 10x Grot Blasta
+◦ 10x Scavenged Shivs
+
+Gretchin (45 Points)
+• 10x Gretchin
+◦ 10x Grot Blasta
+◦ 10x Scavenged Shivs
+
+Kill Rig (185 Points)
+• 1x Butcha Boyz
+• 1x Savage Horns and Hooves
+• 1x Saw Blades
+• 1x Stikka Kannon
+• 1x Wurrtower
+• 1x ’Eavy Lobba
+• Enhancements: Boss Boomer (Upgrade)
+
+Exported with App Version: v2.7.2 (2), Data Version: v972
+Uploaded with   Best Coast Pairings @CentAR October RTT @2026-10-09T02:43:11+00:00
+

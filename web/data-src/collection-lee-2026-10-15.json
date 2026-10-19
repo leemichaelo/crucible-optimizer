@@ -1,0 +1,312 @@
+{
+ "meta": {
+  "owner": "Lee Owen",
+  "faction": "Black Templars",
+  "as_of": "2026-10-15",
+  "purpose": "owned-model caps for the list optimizer (Lee's collection, 2026-10-15)",
+  "app_data_version": "v981"
+ },
+ "rules": {
+  "max_leader_per_unit": 1,
+  "max_support_per_unit": 1,
+  "max_enhancement_per_attached_unit": 1,
+  "min_neophytes_per_crusader_squad": 4,
+  "notes": "Leader max 1 + Support max 1 per unit; 1 enhancement per attached unit; Crusader Squad minimum 4 Neophytes."
+ },
+ "units": [
+  {
+   "name": "Captain",
+   "quantity": 1,
+   "models": 1,
+   "role": "Leader",
+   "source": "authoritative_2026-10-15",
+   "notes": "Plain/power-armour Captain. Prior owned.json listed 'Captain (power armour)' under not_owned; authoritative override wins.",
+   "certainty": "certain"
+  },
+  {
+   "name": "Captain in Terminator Armour",
+   "quantity": 1,
+   "models": 1,
+   "role": "Leader",
+   "source": "authoritative_2026-10-15",
+   "notes": "Resolves prior FLAG in owned.json (Sep 30 table vs Oct 14 'no Captain' wording).",
+   "certainty": "certain"
+  },
+  {
+   "name": "Castellan",
+   "quantity": 1,
+   "models": 1,
+   "role": "Support",
+   "source": "authoritative_2026-10-15; lee-fist-export.txt v981",
+   "notes": null,
+   "certainty": "certain"
+  },
+  {
+   "name": "Chaplain",
+   "quantity": 1,
+   "models": 1,
+   "role": "Leader",
+   "source": "authoritative_2026-10-15",
+   "notes": "Plain Chaplain (non-Grimaldus). Resolves owned.json Chaplain_non_Grimaldus FLAG.",
+   "certainty": "certain"
+  },
+  {
+   "name": "Chaplain on Bike",
+   "quantity": 1,
+   "models": 1,
+   "role": "Leader",
+   "source": "authoritative_2026-10-15",
+   "notes": null,
+   "certainty": "certain"
+  },
+  {
+   "name": "Chaplain with Jump Pack",
+   "quantity": 1,
+   "models": 1,
+   "role": "Leader",
+   "source": "authoritative_2026-10-15",
+   "notes": null,
+   "certainty": "certain"
+  },
+  {
+   "name": "Chaplain Grimaldus",
+   "quantity": 1,
+   "models": 4,
+   "role": "Leader",
+   "composition": {
+    "Chaplain Grimaldus": 1,
+    "Cenobyte Servitors": 3
+   },
+   "source": "authoritative_2026-10-15; lee-fist-export.txt v981",
+   "notes": "Grimaldus + 3 Cenobytes (datasheet is 4 models).",
+   "certainty": "certain"
+  },
+  {
+   "name": "Crusade Ancient",
+   "quantity": 3,
+   "models": 1,
+   "role": "Support",
+   "source": "authoritative_2026-10-15",
+   "notes": "Three separate Ancients owned.",
+   "certainty": "certain"
+  },
+  {
+   "name": "Emperor's Champion",
+   "quantity": 1,
+   "models": 1,
+   "role": "Leader",
+   "source": "authoritative_2026-10-15; lee-fist-export.txt v981",
+   "notes": null,
+   "certainty": "certain"
+  },
+  {
+   "name": "High Marshal Helbrecht",
+   "quantity": 1,
+   "models": 1,
+   "role": "Leader",
+   "source": "authoritative_2026-10-15; lee-fist-export.txt v981",
+   "notes": null,
+   "certainty": "certain"
+  },
+  {
+   "name": "Judiciar",
+   "quantity": 1,
+   "models": 1,
+   "role": "Support",
+   "source": "authoritative_2026-10-15",
+   "notes": null,
+   "certainty": "certain"
+  },
+  {
+   "name": "Marshal",
+   "quantity": 1,
+   "models": 1,
+   "role": "Leader",
+   "source": "authoritative_2026-10-15",
+   "notes": null,
+   "certainty": "certain"
+  },
+  {
+   "name": "Techmarine",
+   "quantity": 1,
+   "models": 1,
+   "role": "Character",
+   "source": "authoritative_2026-10-15",
+   "notes": "Owned; often left out of lists by preference (solo), not an ownership gap.",
+   "certainty": "certain"
+  },
+  {
+   "name": "Assault Intercessor Squad",
+   "quantity": 2,
+   "models": 5,
+   "role": "Battleline",
+   "source": "authoritative_2026-10-15",
+   "notes": "10 Assault Intercessors = 2 boxes of 5. Resolves Assault_Intercessors_second_box FLAG.",
+   "certainty": "certain"
+  },
+  {
+   "name": "Crusader Squad",
+   "quantity": 2,
+   "models": 20,
+   "role": "Battleline",
+   "composition": {
+    "Sword Brother": 1,
+    "Initiates": 11,
+    "Initiate loadout": "7 chainswords + 4 power fists",
+    "Neophytes": 8
+   },
+   "source": "authoritative_2026-10-15; lee-fist-export.txt v981",
+   "notes": "Two 20-man kits. Each: 1 Sword Brother + 11 Initiates (7 chainsword + 4 power fist) + 8 Neophytes. Validator: min 4 Neophytes per Crusader Squad (owned kits have 8). Kit Sword Brothers are separate from the 8 standalone Sword Brethren.",
+   "certainty": "certain"
+  },
+  {
+   "name": "Sword Brethren Squad",
+   "quantity": 1,
+   "models": 8,
+   "role": "Infantry",
+   "source": "authoritative_2026-10-15",
+   "notes": "8 Sword Brethren models separate from the 2 Sword Brothers inside the Crusader Squads (10 SB models total pool). Older owned.json said 'SB box 5'; authoritative 8 wins. Can be fielded as one 4\u20138 or split within datasheet limits.",
+   "certainty": "certain"
+  },
+  {
+   "name": "Terminator Assault Squad",
+   "quantity": 1,
+   "models": 5,
+   "role": "Infantry",
+   "loadout": "thunder hammer + storm shield (default); one model may be lightning claws",
+   "source": "authoritative_2026-10-15",
+   "notes": "5 Assault Terminators. Default TH+SS; one may be lightning claws \u2014 treat LC option as loadout-flexible (WYSIWYG). Resolves prior TAS FLAG.",
+   "certainty": "certain"
+  },
+  {
+   "name": "Scout Squad",
+   "quantity": 1,
+   "models": 5,
+   "role": "Infantry",
+   "source": "authoritative_2026-10-15",
+   "notes": "Separately owned 5 Scouts (not Neophyte proxies). Resolves Scouts_5 FLAG in owned.json.",
+   "certainty": "certain"
+  },
+  {
+   "name": "Outrider Squad",
+   "quantity": 1,
+   "models": 3,
+   "role": "Mounted",
+   "source": "authoritative_2026-10-15",
+   "notes": null,
+   "certainty": "certain"
+  },
+  {
+   "name": "Vanguard Veteran Squad with Jump Packs",
+   "quantity": 1,
+   "models": 5,
+   "role": "Infantry",
+   "source": "authoritative_2026-10-15; lee-fist-export.txt v981; owned tray",
+   "notes": "Auth list did not state model count; v981 list export and owned tray consistently use 5 (1 sergeant + 4).",
+   "certainty": "certain"
+  },
+  {
+   "name": "Impulsor",
+   "quantity": 1,
+   "models": 1,
+   "role": "Dedicated Transport",
+   "loadout": "multi-melta + Orbital Comms Array + storm bolters (as in v981 list export)",
+   "source": "authoritative_2026-10-15; lee-fist-export.txt v981",
+   "notes": "Loadout taken from v981 list export; confirm if physical build differs.",
+   "certainty": "certain"
+  },
+  {
+   "name": "Ballistus Dreadnought",
+   "quantity": 1,
+   "models": 1,
+   "role": "Vehicle",
+   "source": "authoritative_2026-10-15; lee-fist-export.txt v981",
+   "notes": null,
+   "certainty": "certain"
+  },
+  {
+   "name": "Brutalis Dreadnought",
+   "quantity": 1,
+   "models": 1,
+   "role": "Vehicle",
+   "loadout": "Brutalis talons + twin multi-melta (+ twin Icarus ironhail heavy stubber per v981 export)",
+   "source": "authoritative_2026-10-15; lee-fist-export.txt v981",
+   "notes": null,
+   "certainty": "certain"
+  },
+  {
+   "name": "Repulsor Executioner",
+   "quantity": 1,
+   "models": 1,
+   "role": "Vehicle",
+   "loadout": "heavy laser destroyer + multi-melta (as in v981 list export)",
+   "source": "authoritative_2026-10-15; lee-fist-export.txt v981",
+   "notes": "Single RepEx owned; second RepEx not owned.",
+   "certainty": "certain"
+  }
+ ],
+ "not_owned": [
+  {
+   "name": "Repulsor Executioner (second)",
+   "source": "owned.json; nightgeist-dual-crusader-owned-2026-10-06.md",
+   "notes": "Only one RepEx owned."
+  },
+  {
+   "name": "Eradicator Squad",
+   "source": "owned.json",
+   "notes": null
+  },
+  {
+   "name": "Land Raider / Land Raider Crusader / Land Raider Redeemer",
+   "source": "owned.json; nightgeist hard-no",
+   "notes": "Not on authoritative 2026-10-15 owned list."
+  },
+  {
+   "name": "Infiltrator Squad",
+   "source": "owned.json; nightgeist hard-no",
+   "notes": null
+  },
+  {
+   "name": "Gladiator (any)",
+   "source": "owned.json",
+   "notes": null
+  },
+  {
+   "name": "Company Heroes",
+   "source": "nightgeist hard-no",
+   "notes": null
+  },
+  {
+   "name": "Bladeguard Veteran Squad",
+   "source": "nightgeist hard-no",
+   "notes": null
+  },
+  {
+   "name": "Assault Intercessors with Jump Packs",
+   "source": "nightgeist hard-no",
+   "notes": null
+  }
+ ],
+ "uncertain": [
+  {
+   "item": "Terminator Assault Squad lightning-claws option",
+   "source": "authoritative_2026-10-15",
+   "notes": "Auth says one of the 5 may be lightning claws instead of TH+SS; confirm physical build / WYSIWYG."
+  },
+  {
+   "item": "Impulsor / RepEx / Brutalis weapon options",
+   "source": "lee-fist-export.txt v981",
+   "notes": "Loadouts copied from the v981 LIST export; physical builds not independently verified beyond auth Brutalis (talons, twin multi-melta)."
+  },
+  {
+   "item": "Vanguard Veteran Squad with Jump Packs model count",
+   "source": "lee-fist-export.txt v981; owned tray",
+   "notes": "Auth list named the unit but not the size; recorded as 5 from export/tray."
+  },
+  {
+   "item": "AIS proxies from Crusader kit-2 Initiates",
+   "source": "owned.json uncertain; msu-tacticus-draft",
+   "notes": "Not additional owned plastic. Only relevant if a Crusader kit is split; TO OK for proxies. Auth treats both kits as 20-man Crusader Squads."
+  }
+ ]
+}

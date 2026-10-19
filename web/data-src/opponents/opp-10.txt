@@ -1,0 +1,129 @@
+Format inspected: (timestamp removed)
+
+CentAR October RTT
+Opponent 10
+I hate myself (2,000 Points)
+
+Space Marines
+Space Wolves
+Assault Brethren, Saga of the Beastslayer, and Tacticus Firestorm Force (3 Detachment
+Points)
+Take and Hold
+Strike Force (2,000 Points)
+
+ATTACHED UNITS
+
+Attached unit 1
+
+Ragnar Blackmane (100 Points)
+• Attached as: Leader (Character)
+• Warlord
+• 1x Bolt Pistol
+• 1x Frostfang
+
+Blood Claws (290 Points)
+• Attached as: Bodyguard (Battleline)
+• 1x Blood Claw Pack Leader
+◦ 1x Plasma Pistol
+◦ 1x Power Weapon
+• 19x Blood Claw
+◦ 19x Bolt Pistol
+◦ 19x Chainsword
+
+Attached unit 2
+
+Wolf Guard Battle Leader (80 Points)
+• Attached as: Leader (Character)
+• 1x Storm Shield
+• 1x Thunder Hammer
+
+Bladeguard Veteran Squad (180 Points)
+• Attached as: Bodyguard
+• 1x Bladeguard Veteran Sergeant
+◦ 1x Heavy Bolt Pistol
+◦ 1x Master-crafted Power Sword
+• 5x Bladeguard Veteran
+◦ 5x Heavy Bolt Pistol
+◦ 5x Master-crafted Power Sword
+
+Attached unit 3
+
+Wolf Priest (75 Points)
+• Attached as: Leader (Character)
+• 1x Absolvor Bolt Pistol
+• 1x Crozius Arcanum
+
+Grey Hunters (190 Points)
+• Attached as: Bodyguard (Battleline)
+• Enhancements: Furious Assault (Upgrade)
+• 1x Grey Hunter Pack Leader
+◦ 1x Bolt Carbine
+◦ 1x Bolt Pistol
+◦ 1x Power Fist
+• 9x Grey Hunter
+◦ 9x Bolt Carbine
+◦ 9x Bolt Pistol
+◦ 9x Chainsword
+
+Attached unit 4
+
+Wolf Guard Battle Leader (80 Points)
+• Attached as: Leader (Character)
+• 1x Storm Shield
+• 1x Thunder Hammer
+
+Wolf Guard Headtakers (170 Points)
+• Attached as: Bodyguard
+• 6x Wolf Guard Headtaker
+◦ 6x Heavy Bolt Pistol
+◦ 6x Paired Master-crafted Power Weapons
+
+CHARACTERS
+
+Techmarine (55 Points)
+• 1x Forge Bolter
+• 1x Grav-pistol
+• 1x Omnissian Power Axe and Servo-arm
+
+OTHER DATASHEETS
+
+Land Raider Crusader (230 Points)
+• 1x Armoured Tracks
+• 1x Hunter-killer Missile
+• 2x Hurricane Bolter
+• 1x Multi-melta
+• 1x Storm Bolter
+• 1x Twin Assault Cannon
+
+Redemptor Dreadnought (170 Points)
+• 1x Heavy Onslaught Gatling Cannon
+• 1x Icarus Rocket Pod
+• 1x Onslaught Gatling Cannon
+• 1x Redemptor Fist
+• 1x Storm Bolters
+
+Thunderwolf Cavalry (255 Points)
+• 1x Thunderwolf Cavalry Pack Leader
+◦ 1x Bolt Pistol
+◦ 1x Teeth and Claws
+◦ 1x Wolf Guard Weapon
+• 5x Thunderwolf Cavalry
+◦ 5x Boltgun
+◦ 5x Storm Shield
+◦ 5x Teeth and Claws
+◦ 5x Wolf Guard Weapon
+
+Thunderwolf Cavalry (125 Points)
+• 1x Thunderwolf Cavalry Pack Leader
+◦ 1x Bolt Pistol
+◦ 1x Teeth and Claws
+◦ 1x Wolf Guard Weapon
+• 2x Thunderwolf Cavalry
+◦ 2x Boltgun
+◦ 2x Storm Shield
+◦ 2x Teeth and Claws
+◦ 2x Wolf Guard Weapon
+
+Exported with App Version: v2.7.2 (2), Data Version: v972
+Uploaded with   Best Coast Pairings @CentAR October RTT @2026-10-09T02:27:18+00:00
+

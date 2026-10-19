@@ -1,0 +1,123 @@
+Format inspected: (timestamp removed)
+
+CentAR October RTT
+Opponent 08
+List? (1,975 Points)
+
+World Eaters
+Berzerker Warband and Vessels of Wrath (3 Detachment Points)
+Purge the Foe
+Strike Force (2,000 Points)
+
+ATTACHED UNITS
+
+Attached unit 1
+
+Slaughterbound (125 Points)
+• Attached as: Leader (Character)
+• 1x Lacerator and daemonic claw
+• Enhancements: Berzerker Glaive
+
+Exalted Eightbound (130 Points)
+• Attached as: Bodyguard
+• 1x Exalted Eightbound Champion
+◦ 1x Chainblades
+• 2x Exalted Eightbound
+◦ 2x Chainblades
+
+Attached unit 2
+
+Slaughterbound (110 Points)
+• Attached as: Leader (Character)
+• 1x Lacerator and daemonic claw
+• Enhancements: Battle-lust
+
+Exalted Eightbound (130 Points)
+• Attached as: Bodyguard
+• 1x Exalted Eightbound Champion
+◦ 1x Chainblades
+• 2x Exalted Eightbound
+◦ 2x Chainblades
+Attached unit 3
+
+Khârn the Betrayer (115 Points)
+• Attached as: Leader (Character)
+• 1x Gorechild
+• 1x Plasma pistol
+
+Khorne Berzerkers (170 Points)
+• Attached as: Bodyguard (Battleline)
+• 1x Khorne Berzerker Champion
+◦ 1x Bolt pistol
+◦ 1x Chainblade
+• 9x Khorne Berzerker
+◦ 7x Bolt pistol
+◦ 7x Chainblade
+◦ 1x Icon of Khorne
+◦ 2x Khornate eviscerator
+◦ 2x Plasma pistol
+
+CHARACTERS
+
+Angron (330 Points)
+• Warlord
+• 1x Samni’arius and Spinegrinder
+
+Slaughterbound (120 Points)
+• 1x Lacerator and daemonic claw
+• Enhancements: Archslaughterer
+
+DEDICATED TRANSPORTS
+
+Chaos Rhino (75 Points)
+• 1x Armoured tracks
+• 1x Combi-bolter
+• 1x Combi-bolter
+• 1x Havoc launcher
+
+OTHER DATASHEETS
+
+Eightbound (125 Points)
+• 1x Eightbound Champion
+◦ 1x Chainblades
+• 2x Eightbound
+◦ 2x Chainblades
+
+Eightbound (125 Points)
+• 1x Eightbound Champion
+◦ 1x Chainblades
+• 2x Eightbound
+◦ 2x Chainblades
+
+Forgefiend (145 Points)
+• 1x Ectoplasma cannon
+• 1x Forgefiend claws
+• 2x Hades autocannon
+
+Forgefiend (145 Points)
+• 1x Ectoplasma cannon
+• 1x Forgefiend claws
+• 2x Hades autocannon
+
+Jakhals (65 Points)
+• 1x Jakhal Pack Leader
+◦ 1x Autopistol
+◦ 1x Chainblades
+• 1x Dishonoured
+◦ 1x Paired manglers
+• 8x Jakhal
+◦ 8x Autopistol
+◦ 8x Chainblades
+
+Jakhals (65 Points)
+• 1x Jakhal Pack Leader
+◦ 1x Autopistol
+◦ 1x Chainblades
+• 1x Dishonoured
+◦ 1x Paired manglers
+• 8x Jakhal
+◦ 8x Autopistol
+◦ 8x Chainblades
+
+Exported with App Version: v2.7.2 (2), Data Version: v972
+Uploaded with   Best Coast Pairings @CentAR October RTT @2026-10-09T02:26:50+00:00

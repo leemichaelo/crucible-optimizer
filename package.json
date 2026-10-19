@@ -1,0 +1,21 @@
+{
+  "name": "crucible-optimizer",
+  "version": "1.0.0",
+  "description": "Warhammer 40,000 list optimizer that runs entirely in the browser (static GitHub Pages site).",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "data": "tsx scripts/build-web-data.ts",
+    "build": "npm run data && vite build --config web/vite.config.ts",
+    "dev": "npm run data && vite --config web/vite.config.ts",
+    "preview": "vite preview --config web/vite.config.ts",
+    "typecheck": "tsc -p . && tsc -p web/tsconfig.json && tsc -p web/tsconfig.worker.json",
+    "check:shards": "npm run data && tsx scripts/check-shard-equivalence.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.4"
+  }
+}
