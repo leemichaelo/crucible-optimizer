@@ -5,7 +5,8 @@ import { norm } from '../bsdata/parse.ts';
 import type { Roster, RosterUnit } from '../roster/types.ts';
 import { attachedGroups } from '../roster/parse.ts';
 import type { Collection } from './collectionCore.ts';
-import { LEE_RULES, SWORD_BRETHREN, CRUSADER_SQUAD, swordBrethrenCap, enhancementLimit, enhancementCopies, isUpgrade, isEpicHero } from './houseRules.ts';
+import { detachmentPointLimit } from '../select/selectionCore.ts';
+import { LEE_RULES, SWORD_BRETHREN, CRUSADER_SQUAD, swordBrethrenCap, enhancementLimit, enhancementCopies, isUpgrade, isUpgradeEnh, isEpicHero, enhancementSlots, UPGRADE_SLOT_RULE } from './houseRules.ts';
 
 export type Severity = 'error' | 'warning' | 'info';
 export interface Issue { severity: Severity; code: string; unit?: string; message: string; source: 'bsdata' | 'house-rule' | 'collection' | 'parser'; }
@@ -43,7 +44,7 @@ export function validateRoster(r: Roster, cat: CatalogIndex, opts: ValidateOptio
   const units: UnitCheck[] = [];
   let bsTotal = 0; let bsComplete = true;
   const enhSeen = new Map<string, string>();
-  const enhCopies = new Map<string, number>(); let enhTotal = 0;
+  const enhCopies = new Map<string, number>(); const enhNames: { name: string; text?: string }[] = [];
 
   for (const u of r.units) {
     const e = cat.findUnit(u.name, scope);
@@ -79,13 +80,13 @@ export function validateRoster(r: Roster, cat: CatalogIndex, opts: ValidateOptio
         if (en.restrictedTo.length && !en.restrictedTo.some((x) => norm(x) === norm(e.name) || e.keywords.some((k) => norm(k) === norm(x))))
           issues.push({ severity: 'error', code: 'enhancement-bearer', unit: u.name, message: `${en.name} restricted to ${en.restrictedTo.join('/')}; ${e.name} is not eligible`, source: 'bsdata' });
         const prev = enhSeen.get(norm(en.name));
-        const copies = (enhCopies.get(norm(en.name)) ?? 0) + 1; enhCopies.set(norm(en.name), copies); enhTotal++;
-        if (prev && copies > enhancementCopies(en)) issues.push({ severity: 'error', code: 'enhancement-duplicate', unit: u.name, message: `${en.name} already taken by ${prev} (max ${enhancementCopies(en)}${isUpgrade(en.name) ? ' units for an Upgrade' : ''})`, source: isUpgrade(en.name) ? 'house-rule' : 'bsdata' });
+        const copies = (enhCopies.get(norm(en.name)) ?? 0) + 1; enhCopies.set(norm(en.name), copies); enhNames.push(en);
+        if (prev && copies > enhancementCopies(en)) issues.push({ severity: 'error', code: 'enhancement-duplicate', unit: u.name, message: `${en.name} already taken by ${prev} (max ${enhancementCopies(en)}${isUpgradeEnh(en) ? ' units for an Upgrade' : ''})`, source: isUpgradeEnh(en) ? 'house-rule' : 'bsdata' });
         enhSeen.set(norm(en.name), u.name);
         const isChar = e.keywords.some((k) => /^character$/i.test(k)) || e.leads.length > 0 || e.supports.length > 0;
         if (isEpicHero(e)) issues.push({ severity: 'error', code: 'enhancement-epic-hero', unit: u.name, message: `${e.name} is an Epic Hero and cannot take ${en.name}`, source: 'house-rule' });
-        if (isUpgrade(en.name) && isChar) issues.push({ severity: 'error', code: 'enhancement-upgrade-bearer', unit: u.name, message: `${en.name} is an Upgrade: non-CHARACTER units only`, source: 'house-rule' });
-        if (!isUpgrade(en.name) && !isChar) issues.push({ severity: 'error', code: 'enhancement-bearer-character', unit: u.name, message: `${en.name} can only be given to a CHARACTER`, source: 'house-rule' });
+        if (isUpgradeEnh(en) && isChar) issues.push({ severity: 'error', code: 'enhancement-upgrade-bearer', unit: u.name, message: `${en.name} is an Upgrade: non-CHARACTER units only`, source: 'house-rule' });
+        if (!isUpgradeEnh(en) && !isChar) issues.push({ severity: 'error', code: 'enhancement-bearer-character', unit: u.name, message: `${en.name} can only be given to a CHARACTER`, source: 'house-rule' });
         if (u.enhancementPts !== null && u.enhancementPts !== en.pts)
           issues.push({ severity: 'warning', code: 'enhancement-points-mismatch', unit: u.name, message: `pasted +${u.enhancementPts}, BSData ${en.pts}`, source: 'bsdata' });
       }
@@ -108,7 +109,16 @@ export function validateRoster(r: Roster, cat: CatalogIndex, opts: ValidateOptio
 
   {
     const lim = enhancementLimit(opts.pointsLimit ?? r.declaredPoints ?? 2000);
-    if (enhTotal > lim.max) issues.push({ severity: 'error', code: 'enhancement-limit', message: `${enhTotal} enhancements (max ${lim.max}: ${lim.source})`, source: 'house-rule' });
+    const slots = enhancementSlots(enhNames);
+    // Detachment Points: roster total vs the BSData limit for the battle size (Strike Force 3)
+    const dpLim = detachmentPointLimit(opts.pointsLimit ?? r.declaredPoints ?? 2000);
+    const dEntries = r.detachments.map((n) => ({ n, d: (cat.cat.detachments ?? []).find((x) => norm(x.name) === norm(n)) }));
+    const unknown = dEntries.filter((x) => !x.d).map((x) => x.n);
+    if (unknown.length) issues.push({ severity: 'warning', code: 'detachment-unknown', message: `detachment(s) not found in BSData: ${unknown.join(', ')}`, source: 'bsdata' });
+    const dpTotal = dEntries.reduce((s, x) => s + (x.d?.detachmentPoints ?? 0), 0);
+    if (dpLim && dEntries.every((x) => x.d && x.d.detachmentPoints !== null) && dpTotal > dpLim.max)
+      issues.push({ severity: 'error', code: 'detachment-points', message: `${dEntries.map((x) => `${x.n} (${x.d!.detachmentPoints} DP)`).join(' + ')} = ${dpTotal} DP exceeds ${dpLim.max} (${dpLim.battleSize}; ${dpLim.source})`, source: 'bsdata' });
+    if (slots > lim.max) issues.push({ severity: 'error', code: 'enhancement-limit', message: `${slots} enhancement slots used by ${enhNames.length} enhancements (max ${lim.max}: ${lim.source}; ${UPGRADE_SLOT_RULE})`, source: 'house-rule' });
   }
   // attached units
   for (const g of attachedGroups(r)) {

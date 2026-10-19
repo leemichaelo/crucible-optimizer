@@ -18,10 +18,14 @@
       <label>Army <select id="army" disabled><option>loading…</option></select></label>
       <label>Detachment <select id="detachment" disabled></select></label>
       <label>Second detachment (optional) <select id="detachment2" disabled><option value="">(none)</option></select></label>
+      <label>Third detachment (optional) <select id="detachment3" disabled><option value="">(none)</option></select></label>
       <label>Disposition <select id="disposition"></select></label>
+      <label>Points <select id="points"><option value="1000">1000 (Incursion)</option><option value="2000" selected>2000 (Strike Force)</option><option value="3000">3000 (Onslaught)</option></select></label>
+      <label>Warlord (optional) <input id="warlord" type="text" placeholder="auto"></label>
     </div>
+    <p class="hint" id="parsenote" hidden></p>
     <p class="hint" id="dethint"></p>
-    <label class="block">Paste a list (40k App text) or a collection JSON <span class="muted">(optional; empty = Lee's collection, 2026-10-15)</span>
+    <label class="block">Paste a list (40k App / BCP / New Recruit) or a collection JSON <span class="muted">(optional; empty = Lee's collection, 2026-10-15). A pasted list auto-fills army, detachments, disposition, points and warlord; for an army other than Black Templars the pasted list is the unit pool (Lee's collection limits and house rules are not applied).</span>
       <textarea id="input" rows="8" placeholder="Leave empty to use Lee's collection (owned-model caps) and Lee's list export (wargear)."></textarea>
     </label>
     <fieldset>
@@ -29,7 +33,7 @@
       <label class="inline"><input type="checkbox" id="dedOn" checked> At least <input type="number" id="ded" value="2" min="1" max="6" step="1"> dedicated tank killers</label>
       <span class="muted">(besides the Ballistus; not melee infantry bricks or characters; must pass the &ge;45% wounds test vs T10-12)</span><br>
       <label class="inline">Units per toughness band <input type="number" id="band" value="2" min="0" max="4" step="1"></label>
-      <label class="inline">Beam width <input type="number" id="beam" value="40" min="5" max="200" step="5"></label>
+      <label class="inline">Beam width <input type="number" id="beam" value="80" min="5" max="200" step="5"></label>
       <span class="muted">(wider = slower, sometimes finds more)</span>
     </fieldset>
     <div class="actions">
@@ -54,7 +58,7 @@
     <li><b>Data:</b> BSData wh40k-11e pinned at commit <code id="commit">d506fcc</code> (<span id="commitDate">2026-10-14</span>). Points are <b>not official</b> and may lag MFM / points updates; rules text in BSData is thinner than the datasheets.</li>
     <li><b>Stratagems:</b> from Wahapedia (a <b>secondary</b> source; BSData has none at this commit).</li>
     <li><b>All scores are ESTIMATE / HEURISTIC</b>: one-activation expected damage from a dice engine plus author-chosen weights. They rank lists; they do not predict games.</li>
-    <li>House rules applied: 4 enhancements at Strike Force; Upgrades on up to 3 non-Character units (each uses a slot, paid each time); max 1 enhancement per unit incl. attached units; none on Epic Heroes; no unattached characters; owned models only.</li>
+    <li>House rules applied: 4 enhancements at Strike Force; Upgrades on up to 3 non-Character units, and up to 3 copies of the SAME Upgrade together use ONE enhancement slot (Munitorum ruling; each copy is paid); max 1 enhancement per unit incl. attached units; none on Epic Heroes; no unattached characters; owned models only.</li>
   </ul>
 </footer>
 <script type="module" src="./main.ts"></script>

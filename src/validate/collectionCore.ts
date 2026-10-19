@@ -44,3 +44,16 @@ export function parseCollection(input: string | unknown, path = 'inline'): Colle
     return { ...base, status: 'invalid', error: String(e) };
   }
 }
+
+/**
+ * A pasted list used as the unit pool (non-owned faction): every datasheet the list fields, as many copies and models as it fields.
+ * Lets the optimizer re-arrange that list (attachments, enhancements, which units to take) without inventing models.
+ */
+export function collectionFromRoster(r: { name: string | null; faction: string | null; units: { name: string; modelCount: number }[] }, path: string): Collection {
+  const by = new Map<string, OwnedUnit>();
+  for (const u of r.units) {
+    const o = by.get(u.name) ?? { name: u.name, quantity: 0, modelsPerUnit: 0, totalModels: 0, composition: null, loadout: null, certainty: 'from pasted list', notes: 'unit pool = the pasted list' };
+    o.quantity += 1; o.modelsPerUnit = Math.max(o.modelsPerUnit, u.modelCount); o.totalModels += u.modelCount; by.set(u.name, o);
+  }
+  return { status: 'loaded', path, owner: null, asOf: null, units: [...by.values()], rules: {}, notOwned: [], uncertain: [] };
+}

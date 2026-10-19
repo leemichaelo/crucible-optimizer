@@ -59,7 +59,7 @@ export interface Selection { army: string; armyCatalogue: string; detachments: D
 
 /** Validate the three selections against BSData. Throws on hard errors (unknown/unavailable detachment, disposition not granted). */
 export function resolveSelection(cat: CatalogIndex, army: string, detNames: string[], disposition: Disposition, pointsLimit = 2000, strats: StratagemFile | null = null): Selection {
-  if (detNames.length > 2) throw new Error(`at most two detachments (a pair) can be combined; got ${detNames.length}: ${detNames.join(', ')}`);
+  if (detNames.length > MAX_DETACHMENTS) throw new Error(`at most ${MAX_DETACHMENTS} detachments can be combined (total also capped by the BSData Detachment Points limit); got ${detNames.length}: ${detNames.join(', ')}`);
   const avail = detachmentsFor(cat, army);
   const sf = stratagemsFor(detNames, strats);
   const gaps: string[] = [sf.label === 'UNAVAILABLE' ? `BSData d506fcc has no stratagem entries; SECONDARY stratagem file missing (${(sf as { blocker?: string }).blocker}).` : `BSData d506fcc has no stratagem entries; stratagems come from a SECONDARY source (${(sf as { source?: { url: string; retrieved: string } }).source?.url}, retrieved ${(sf as { source?: { retrieved: string } }).source?.retrieved}) and are filtered to the chosen detachment(s): ${sf.stratagems.length} found${sf.missing.length ? `; none found for ${sf.missing.join(', ')}` : ''}. Offensive ones in the engine: ${offensiveStratsFor(detNames).join(', ') || 'none'}.`];
@@ -86,10 +86,10 @@ export function resolveSelection(cat: CatalogIndex, army: string, detNames: stri
     const missingDp = dets.filter((d) => d.detachmentPoints === null).map((d) => d.name);
     const dp = dets.reduce((s, d) => s + (d.detachmentPoints ?? 0), 0);
     const lim = detachmentPointLimit(pointsLimit);
-    if (missingDp.length) gaps.push(`GAP: BSData has no Detachment Points cost for ${missingDp.join(', ')}; the pair's DP total is not checked.`);
+    if (missingDp.length) gaps.push(`GAP: BSData has no Detachment Points cost for ${missingDp.join(', ')}; the DP total is not checked.`);
     else if (lim === null) gaps.push(`GAP: no BSData Detachment Points limit known for a ${pointsLimit}-pt game; ${dp} DP not checked.`);
     else if (dp > lim.max) throw new Error(`detachments ${dets.map((d) => `${d.name} (${d.detachmentPoints} DP)`).join(' + ')} = ${dp} DP exceeds the ${lim.max} DP limit for ${lim.battleSize} (${lim.source})`);
-    else gaps.push(`Detachment pair: ${dets.map((d) => `${d.name} ${d.detachmentPoints} DP`).join(' + ')} = ${dp}/${lim.max} DP for ${lim.battleSize} (${lim.source}). Disposition valid if granted by either; enhancements, stratagems and rules are the union of both.`);
+    else gaps.push(`Detachments: ${dets.map((d) => `${d.name} ${d.detachmentPoints} DP`).join(' + ')} = ${dp}/${lim.max} DP for ${lim.battleSize} (${lim.source}). Disposition valid if granted by any of them; enhancements, stratagems and rules are the union of all of them.`);
   }
   return { army, armyCatalogue: armyCatalogue(cat, army), detachments: dets, disposition, gaps };
 }
@@ -104,6 +104,8 @@ export function chapterLocked(sel: Selection): boolean {
  * (82ae-1066-5107-6ae0), Army Roster constraint 95c5-effd-74f1-c8f4 max 2, set to 3 for "2. Strike Force (2000 Point limit)"
  * (or Incursion with a "3DP Detachment"), set to 4 for "3. Onslaught (3000 Point limit)". Checked against the file in test/detachments.test.ts.
  */
+/** Most detachments the page/CLI combine (Strike Force: 3 DP, so three 1-DP detachments). */
+export const MAX_DETACHMENTS = 3;
 export const DP_LIMITS = [
   { maxPoints: 1000, battleSize: '1. Incursion (1000 Point limit)', max: 2 },
   { maxPoints: 2000, battleSize: '2. Strike Force (2000 Point limit)', max: 3 },

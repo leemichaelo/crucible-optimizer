@@ -9,18 +9,27 @@ elapsed time, and produces a `best.txt` in 40k App text format.
 
 With the paste box empty it uses Lee's collection (owned-model caps, 2026-10-15) and Lee's list export (unit wargear).
 
+Pasting a list (40k App, BCP or New Recruit export) auto-fills army, up to 3 detachments, disposition, points size and warlord,
+and loads that army's data. For an army other than Black Templars the pasted list becomes the unit pool (Lee's collection limits
+and Lee's house rules such as "no unattached characters" are not applied), and the page says so. A pasted list is also checked
+against every hard rule as a baseline (`# baseline ...` lines in best.txt).
+
 ## Rules applied
 
 - Owned models only; no unattached characters; max 1 Leader + 1 Support per unit.
 - Enhancements: 4 at Strike Force (overrides BSData's 2). "(Upgrade)" enhancements go on non-Character units, up to 3 units
-  each; every copy uses one of the 4 slots and is paid each time. Max 1 enhancement per unit including attached units.
+  each; up to 3 copies of the SAME Upgrade together use ONE of the 4 slots (Munitorum ruling), each copy paid. Max 1 enhancement per unit including attached units.
   None on Epic Heroes (BSData keyword; Chaplain Grimaldus is treated as an Epic Hero, his BSData datasheet lacks the keyword).
   Furious Assault does not stack with Terminatus Assault's Sustained Hits (Sustained Hits never stacks).
 - HARD default: at least 2 **dedicated tank killers** besides the Ballistus: not characters, not melee infantry bricks
   (infantry must pass on ranged weapons alone; e.g. Repulsor Executioner, Brutalis Dreadnought, Eradicators, Land Raiders),
   each passing the >= 45% wounds test vs T10-12 vehicles. Can be unticked or changed on the page. If the collection cannot
   satisfy it, the page says so and lists the qualifying owned units.
-- HARD: at least 2 units able to remove 80+ points of a target in every toughness band (list-building checklist), >= 11 units.
+- HARD: at least 2 units able to remove 80+ points (expected, one activation) of a target in every toughness band (list-building
+  checklist; a single-model target counts only when killed, so it is P(kill) x points), >= 11 units on the table (an attached
+  unit counts once). If a band can never get 2 passers from the unit pool, the page says which band and which units could pass.
+- Up to 3 detachments, total checked against the BSData Detachment Points limit (Strike Force 3).
+- Search: beam width 80, 5 leader/support combos per bodyguard, then a hill-climb polish of the top 5 lists.
 
 ## Data and caveats
 

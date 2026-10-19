@@ -13,7 +13,7 @@ import { emptyUnit } from '../roster/types.ts';
 import { MemoryCellCache, type CellStore } from './cellCache.ts';
 import type { Collection } from '../validate/collectionCore.ts';
 import { validateRoster, wargearCost } from '../validate/validator.ts';
-import { LEE_RULES, SWORD_BRETHREN, CRUSADER_SQUAD, swordBrethrenCap, enhancementLimit, UPGRADE_MAX_UNITS, isUpgrade, enhancementCopies, EPIC_HERO_OVERRIDES, isEpicHero } from '../validate/houseRules.ts';
+import { LEE_RULES, SWORD_BRETHREN, CRUSADER_SQUAD, swordBrethrenCap, enhancementLimit, UPGRADE_MAX_UNITS, isUpgrade, enhancementCopies, EPIC_HERO_OVERRIDES, isEpicHero, enhancementSlots, UPGRADE_SLOT_RULE, isUpgradeEnh } from '../validate/houseRules.ts';
 import { buildTemplates, type Template } from './templates.ts';
 import { weaponSlots } from '../engine/build.ts';
 import { attackAbilities, defenceAbilities, diceEnhancement, enhancementEffect, offensiveStratsFor, RULE_EFFECTS, type StripStrats } from '../rules/detachments.ts';
@@ -41,6 +41,12 @@ export interface OptimizeOptions {
    */
   minDedicatedTankKillers?: number;
   minUnits?: number;
+  /** Local polish after the beam: how many top finished lists to hill-climb with single-block swaps/additions (default 5, 0 disables). */
+  polishTop?: number;
+  /** Lee's house rules (no unattached characters, Sword Brethren cap...). Default true; false for other factions / opponent lists. */
+  leeHouseRules?: boolean;
+  /** Warlord (e.g. auto-filled from a pasted list): locked into every list (x1) and chosen as WARLORD. */
+  warlord?: string | null;
   minBandUnits?: number;
   baselineWarlords?: { file: string; name: string }[];
   /** Canonical Force Disposition (drives tier targets + exported list mission). */
@@ -126,7 +132,7 @@ export function optimizeCore(cat: CatalogIndex, col: Collection, data: OptimizeD
   const diceEnh = enh.filter((e) => diceEnhancement(e.name));
   const otherEnh = enh.filter((e) => !diceEnh.includes(e));
   const enhLimit = enhancementLimit(o.points);
-  pruned.enhancementRules = `max ${enhLimit.max} enhancements (${enhLimit.source}); "(Upgrade)" enhancements only on non-CHARACTER units, up to ${UPGRADE_MAX_UNITS} units each (each uses a slot, paid each time); ordinary enhancements on CHARACTERS; max 1 per unit incl. attached units; none on Epic Heroes (BSData keyword; overrides: ${EPIC_HERO_OVERRIDES.join(', ')})`;
+  pruned.enhancementRules = `max ${enhLimit.max} enhancements (${enhLimit.source}); "(Upgrade)" enhancements only on non-CHARACTER units, up to ${UPGRADE_MAX_UNITS} units each (${UPGRADE_SLOT_RULE}); ordinary enhancements on CHARACTERS; max 1 per unit incl. attached units; none on Epic Heroes (BSData keyword; overrides: ${EPIC_HERO_OVERRIDES.join(', ')})`;
   pruned.enhancements = `${enh.length} enhancements in [${o.detachments.join(', ')}]: ${enh.map((e) => `${e.name} ${e.pts}pts`).join(', ')}. Engine-modelled (src/rules/detachments.ts): ${diceEnh.map((e) => e.name).join(', ') || 'none'}; the rest are scored by the HEURISTIC enhancement-slot term. Epic Heroes are never given one (ASSUMPTION: core-rules restriction, not checked in BSData).`;
 
   const autoAb = (b: Block) => attackAbilities(o.detachments, b.units);
@@ -147,7 +153,7 @@ export function optimizeCore(cat: CatalogIndex, col: Collection, data: OptimizeD
   const bodies = templates.filter((t) => !t.isCharacter);
   // Enhancement bearers (Lee's rulings 2026-10-19 + BSData restrictions): ordinary enhancements on CHARACTERS only; "(Upgrade)" enhancements on
   // non-CHARACTER units only; never on an Epic Hero (BSData keyword, plus EPIC_HERO_OVERRIDES where BSData lacks the keyword).
-  const eligible = (en: (typeof enh)[number], t: Template) => !isEpicHero(t.entry) && (isUpgrade(en.name) ? !t.isCharacter : t.isCharacter) && (!en.restrictedTo.length || en.restrictedTo.some((r) => norm(r) === norm(t.entry.name) || t.entry.keywords.some((k) => norm(k) === norm(r))));
+  const eligible = (en: (typeof enh)[number], t: Template) => !isEpicHero(t.entry) && (isUpgradeEnh(en) ? !t.isCharacter : t.isCharacter) && (!en.restrictedTo.length || en.restrictedTo.some((r) => norm(r) === norm(t.entry.name) || t.entry.keywords.some((k) => norm(k) === norm(r))));
   const mk = (parts: [Template, RosterUnit['attachedAs']][], enhancement: string | null): Block => {
     const units = parts.map(([t, role]) => { const u = clone(t.unit); u.attachedAs = parts.length > 1 ? role : null; return u; });
     const e = enhancement ? enh.find((x) => x.name === enhancement) : null;
@@ -168,12 +174,15 @@ export function optimizeCore(cat: CatalogIndex, col: Collection, data: OptimizeD
   const pureSupport = (t: Template) => !t.entry.leads.length && t.entry.supports.length > 0;
   const soloChars = chars.filter((c) => !pureSupport(c));
   pruned.unattachedSupport = `standalone blocks not generated for pure Support characters: ${[...new Set(chars.filter(pureSupport).map((c) => c.entry.name))].join(', ') || 'none'}`;
-  // Lee house rule: no unattached characters (HARD in the optimizer)
-  pruned.unattachedCharacters = `no standalone character blocks (Lee house rule): ${[...new Set(soloChars.map((c) => c.entry.name))].join(', ')} only appear attached`;
+  // Lee house rule: no unattached characters (HARD in the optimizer) -- only for Lee's own lists (o.leeHouseRules, default true)
+  const leeRules = o.leeHouseRules !== false;
+  pruned.unattachedCharacters = leeRules ? `no standalone character blocks (Lee house rule): ${[...new Set(soloChars.map((c) => c.entry.name))].join(', ')} only appear attached`
+    : `Lee house rules OFF (not Lee's list/collection): characters may also be fielded unattached (${soloChars.length} standalone character templates)`;
+  if (!leeRules) for (const c of soloChars) { blocks.push(mk([[c, null]], null)); for (const e of enh) if (!isUpgradeEnh(e) && eligible(e, c)) { blocks.push(mk([[c, null]], e.name)); combos++; } }
   for (const b of bodies) {
     blocks.push(mk([[b, null]], null));
-    // "(Upgrade)" enhancements on a standalone non-CHARACTER unit (each copy uses one enhancement slot and is paid each time)
-    for (const e of enh) if (isUpgrade(e.name) && eligible(e, b)) { blocks.push(mk([[b, null]], e.name)); combos++; }
+    // "(Upgrade)" enhancements on a standalone non-CHARACTER unit (copies of the same Upgrade share ONE slot; each copy is paid)
+    for (const e of enh) if (isUpgradeEnh(e) && eligible(e, b)) { blocks.push(mk([[b, null]], e.name)); combos++; }
     const leaders = chars.filter((c) => c.entry.leads.some((x) => norm(x) === norm(b.entry.name)));
     const supports = chars.filter((c) => c.entry.supports.some((x) => norm(x) === norm(b.entry.name)));
     const cand: Block[] = [];
@@ -214,11 +223,14 @@ export function optimizeCore(cat: CatalogIndex, col: Collection, data: OptimizeD
   // INFANTRY scored on RANGED weapons only (so melee infantry bricks fail), other units (vehicles, walkers, monsters) on the full activation.
   const needDed = o.minDedicatedTankKillers ?? 2;
   const dedMemo = new Map<string, number>();
+  // CHARACTER test: the template's flag (search blocks) or, for parsed baseline lists (no templates), the same rule from BSData
+  const isCharAt = (b: Block, k: number): boolean => { const t = b.templates[k]; if (t) return t.isCharacter; const e = cat.findUnit(b.units[k]!.name, scope); return !!e && (e.keywords.some((x) => /^character$/i.test(x)) || e.leads.length > 0 || e.supports.length > 0); };
   const dedicatedOf = (b: Block): number => {
     const hit = dedMemo.get(b.cellKey); if (hit !== undefined) return hit;
     let v = 0;
-    const body = b.units.filter((_, k) => !b.templates[k]?.isCharacter && !/ballistus/i.test(b.units[k]!.name));
-    if (b.templates.length && body.length === b.units.filter((_, k) => !b.templates[k]?.isCharacter).length && body.length) {
+    const nonChar = b.units.filter((_, k) => !isCharAt(b, k));
+    const body = nonChar.filter((u) => !/ballistus/i.test(u.name));
+    if (body.length === nonChar.length && body.length) {
       const infantry = body.some((u) => cat.findUnit(u.name, scope)?.keywords.some((k) => /^infantry$/i.test(k)));
       const phases: readonly Phase[] = infantry ? ['ranged'] : ['ranged', 'melee'];
       const solo = body.map((u) => ({ ...clone(u), attachedAs: null }));
@@ -375,7 +387,7 @@ export function optimizeCore(cat: CatalogIndex, col: Collection, data: OptimizeD
     const n = WEIGHTS.normalisers;
     const allUnits = bl.flatMap((b) => b.units);
     const enhCount = allUnits.filter((u) => u.enhancement).length;
-    const warlord = allUnits.find((u) => u.warlord) ?? warlordPick(allUnits);
+    const warlord = allUnits.find((u) => u.warlord) ?? warlordPick(allUnits, o.warlord);
     const cpPerRound = warlord && /helbrecht/i.test(warlord.name) ? 1 : 0;
     const tks = nonBallistusTankKillers(bl.map((b) => ({ label: b.label, tank: tankOf(b) })));
     const dedicated = bl.filter(isDedicated).map((b) => b.label);
@@ -422,13 +434,13 @@ export function optimizeCore(cat: CatalogIndex, col: Collection, data: OptimizeD
       if (t.entry.maxPerForce !== null && (ds.get(t.entry.id) ?? 0) > t.entry.maxPerForce) return false;
     }
     const enhs = bl.map((b) => b.enhancement).filter((x): x is string => !!x);
-    if (enhs.length > enhLimit.max) return false;
+    if (enhancementSlots(enhs.map((n) => enh.find((x) => x.name === n) ?? n)) > enhLimit.max) return false;
     for (const name of new Set(enhs)) { const e = enh.find((x) => x.name === name); if (enhs.filter((x) => x === name).length > enhancementCopies(e)) return false; }
     if (bl.some((b) => b.units.filter((u) => u.enhancement).length > LEE_RULES.maxEnhancementPerAttachedUnit)) return false;
     return true;
   };
 
-  const locks = o.locks ?? []; const needTk = o.minTankKillers ?? 2; const needNbTk = o.minNonBallistusTankKillers ?? 2;
+  const locks = [...(o.locks ?? []), ...(o.warlord && !(o.locks ?? []).some((l) => norm(l.name) === norm(o.warlord!)) ? [{ name: o.warlord, count: 1 }] : [])]; const needTk = o.minTankKillers ?? 2; const needNbTk = o.minNonBallistusTankKillers ?? 2;
   const missing = (bl: Block[]) => locks.reduce((a, l) => a + Math.max(0, l.count - bl.filter((b) => l.name.split('+').every((nm) => b.units.some((u) => norm(u.name) === norm(nm.trim()) && (l.models === undefined || u.attachedAs === 'Leader' || u.attachedAs === 'Support' || u.modelCount === l.models)))).length), 0);
   const tkAll = (bl: Block[]) => bl.filter((b) => tankOf(b) >= TANK_KILLER_THRESHOLD).length;
   const tkCount = (bl: Block[]) => nonBallistusTankKillers(bl.map((b) => ({ label: b.label, tank: tankOf(b) }))).length;
@@ -440,6 +452,22 @@ export function optimizeCore(cat: CatalogIndex, col: Collection, data: OptimizeD
   const bandDeficit = (bl: Block[]) => bandRefs.reduce((a, _, k) => a + Math.max(0, minBand - bl.filter((b) => bandOf(b)[k]).length), 0);
   const failingBands = (bl: Block[]) => bandRefs.filter((_, k) => bl.filter((b) => bandOf(b)[k]).length < minBand).map((r, k) => `${r.band} (${bl.filter((b) => bandOf(b)[bandRefs.indexOf(r)]).length})`);
   const done = (bl: Block[]) => missing(bl) === 0 && tkDeficit(bl) === 0 && bl.length >= minUnits && bandDeficit(bl) === 0;
+  /** Every HARD rule checked on a concrete list (used for baseline lists), with the numbers behind each verdict. */
+  const hardReport = (bl: Block[], validatorErrors: string[]) => {
+    const pts = bl.reduce((a, b) => a + b.pts, 0);
+    const bands = bandRefs.map(({ band: bn }, k) => ({ band: bn, passers: bl.filter((b) => bandOf(b)[k]).map((b) => b.label), need: minBand }));
+    const checks = [
+      { rule: `points <= ${o.points}`, value: pts, ok: pts <= o.points },
+      { rule: `>= ${minUnits} units on the table (an attached unit counts once)`, value: bl.length, ok: bl.length >= minUnits },
+      ...bands.map((x) => ({ rule: `>= ${minBand} units pass band ${x.band}`, value: x.passers.length, detail: x.passers, ok: x.passers.length >= minBand })),
+      { rule: `>= ${needTk} tank killers (any, 45% test)`, value: tkAll(bl), detail: bl.filter((b) => tankOf(b) >= TANK_KILLER_THRESHOLD).map((b) => `${b.label} ${tankOf(b).toFixed(3)}`), ok: tkAll(bl) >= needTk },
+      { rule: `>= ${needNbTk} non-Ballistus tank killers`, value: tkCount(bl), ok: tkCount(bl) >= needNbTk },
+      { rule: `>= ${needDed} dedicated tank killers`, value: dedCount(bl), detail: bl.map((b) => `${b.label} ${dedicatedOf(b).toFixed(3)}`).filter((x) => !x.endsWith(' 0.000')), ok: dedCount(bl) >= needDed },
+      { rule: 'locks', value: missing(bl), ok: missing(bl) === 0 },
+      { rule: 'validator (ownership, datasheet limits, enhancements, house rules)', value: validatorErrors.length, detail: validatorErrors, ok: validatorErrors.length === 0 },
+    ];
+    return { feasible: checks.every((c) => c.ok), failing: checks.filter((c) => !c.ok).map((c) => `${c.rule}: ${c.value}`), checks };
+  };
   const nearMiss = new Map<string, { bl: Block[]; pts: number }>();
   // can this partial list still reach minUnits within the points cap? (greedy cheapest legal additions; lookahead prune)
   const byPts = [...blocks].sort((a, b) => a.pts - b.pts);
@@ -484,8 +512,27 @@ export function optimizeCore(cat: CatalogIndex, col: Collection, data: OptimizeD
     dropped += Math.max(0, uniq.length - o.beamWidth);
     beam = uniq.slice(0, o.beamWidth);
   }
+  // ---- local polish: the beam can drop the best list (Tactician 2026-10-19: beam 40 found 0.8352, beam 120 found 0.8612 for AB + Vow Purge).
+  // Hill-climb the top finished lists with single-block swaps and additions that keep every HARD rule; accept the best improvement, repeat.
+  const okList = (bl: Block[], pts: number) => pts <= o.points && pts >= o.minPoints && legal(bl) && done(bl) && bl.some((b) => b.templates.some((t) => t.isCharacter));
+  let polishMoves = 0; let polishEvals = 0;
+  const polishTop = o.polishTop ?? 5;
+  const seeds = [...finished.values()].map((x) => ({ x, s: score(x.bl).total })).sort((a, b) => b.s - a.s).slice(0, polishTop);
+  progress({ phase: 'search', done: depth, total: depth, message: `polishing the top ${seeds.length} lists (single-block swaps)` });
+  for (const { x, s: s0 } of seeds) {
+    let cur = x; let curS = s0;
+    for (let iter = 0; iter < 10; iter++) {
+      let best: { st: St; s: number } | null = null;
+      const consider = (bl: Block[], pts: number) => { if (!okList(bl, pts)) return; polishEvals++; const sc = score(bl).total; if (sc > (best?.s ?? curS) + 1e-9) best = { st: { bl, idx: 0, pts, s: sc }, s: sc }; };
+      for (let i = 0; i < cur.bl.length; i++) for (const b of blocks) { if (b.id === cur.bl[i]!.id) continue; const pts = cur.pts - cur.bl[i]!.pts + b.pts; if (pts > o.points || pts < o.minPoints) continue; consider(cur.bl.map((y, j) => (j === i ? b : y)), pts); }
+      for (const b of blocks) { const pts = cur.pts + b.pts; if (pts <= o.points) consider([...cur.bl, b], pts); }
+      if (!best) break;
+      cur = (best as { st: St }).st; curS = (best as { s: number }).s; polishMoves++;
+    }
+    if (cur !== x) finished.set(cur.bl.map((b) => b.id).sort().join('|'), cur);
+  }
   const searchMs = Date.now() - t2;
-  pruned.search = `beam width ${o.beamWidth}: ${expanded} partial lists scored; ${overCap} expansions cut for exceeding ${o.points} pts; ${illegal} cut for ownership/datasheet/enhancement limits; ${infeasible} cut because ${minUnits} units could no longer fit; ${dropped} dropped by the beam`;
+  pruned.search = `beam width ${o.beamWidth}: ${expanded} partial lists scored; ${overCap} expansions cut for exceeding ${o.points} pts; ${illegal} cut for ownership/datasheet/enhancement limits; ${infeasible} cut because ${minUnits} units could no longer fit; ${dropped} dropped by the beam; polish of the top ${seeds.length}: ${polishMoves} improving swaps (${polishEvals} candidate lists scored)`;
 
   progress({ phase: 'validate', done: 0, total: 1, message: `validating ${finished.size} finished lists` });
   // ---- finalize: validate with the real validator, rank ----
@@ -500,7 +547,7 @@ export function optimizeCore(cat: CatalogIndex, col: Collection, data: OptimizeD
     const group = byComp.get(composition(st.bl))!;
     if (group[0] !== st) { collapsed++; continue; }
     const roster = toRoster(st.bl, o);
-    const v = validateRoster(roster, cat, { collection: col, pointsLimit: o.points });
+    const v = validateRoster(roster, cat, { collection: col, pointsLimit: o.points, houseRules: leeRules });
     if (!v.ok) { rejected++; continue; }
     const sc = score(st.bl);
     results.push({
@@ -519,13 +566,29 @@ export function optimizeCore(cat: CatalogIndex, col: Collection, data: OptimizeD
   }
   pruned.validatorRejected = rejected;
   pruned.collapsed = `${collapsed} lists folded into a higher-ranked entry with the same units (differing only in enhancement choice/placement); see alternateEnhancementPlacements`;
+  // Band ceilings: how many units passing each band the collection can field TOGETHER (ownership/enhancement legality, points cap),
+  // searched exactly up to minBand. A ceiling below minBand means the toughness-band rule alone makes every list infeasible.
+  const bandCeiling = (k: number) => {
+    const cap = blocks.filter((b) => bandOf(b)[k]);
+    let best: Block[] = [];
+    const dfs = (start: number, cur: Block[], pts: number) => {
+      if (cur.length > best.length) best = cur;
+      if (best.length >= minBand) return;
+      for (let i = start; i < cap.length; i++) { const b = cap[i]!; if (pts + b.pts > o.points) continue; const nx = [...cur, b]; if (legal(nx)) dfs(i + 1, nx, pts + b.pts); if (best.length >= minBand) return; }
+    };
+    dfs(0, [], 0);
+    return { max: best.length, capable: [...new Set(cap.map((b) => b.label.replace(/ \(.*\)$/, '')))] };
+  };
+  const bandBlockers = finished.size ? [] : bandRefs.map((r, k) => ({ band: r.band, ref: r.ref.label, ...bandCeiling(k) })).filter((x) => x.max < minBand);
+  const bandBlockText = bandBlockers.map((x) => `toughness band ${x.band} (ref ${x.ref}, pass = >= ${Math.min(80, 0.8 * (bandRefs.find((r) => r.band === x.band)!.ref.pts)).toFixed(0)} expected points removed in one activation): at most ${x.max} owned unit(s) can pass together, ${minBand} required. Units able to pass: ${x.capable.join('; ') || 'none'}`).join(' | ');
   const tankTable = Object.fromEntries([...new Map(blocks.filter((b) => b.units.length === 1 && !b.enhancement).map((b) => [b.label, +tankOf(b).toFixed(3)])).entries()].sort((a, b) => b[1] - a[1]));
   const infeasibility = finished.size ? null : {
-    message: shortCircuit ? dedicatedReport(dedicatedMax)!.message : `No list found at ${o.points} pts that meets every HARD constraint (>= ${minBand} units passing every toughness band, >= ${minUnits} units, >= ${needTk} tank killers incl. Ballistus AND >= ${needNbTk} non-Ballistus tank killers${needDed > 0 ? ` AND >= ${needDed} dedicated tank killers` : ''}, locks). The rule was NOT relaxed. Closest lists (all other constraints met) follow.`,
+    bindingRules: bandBlockers.length ? bandBlockers.map((x) => `band ${x.band}: max ${x.max} < ${minBand}`) : null,
+    message: shortCircuit ? dedicatedReport(dedicatedMax)!.message : bandBlockers.length ? `INFEASIBLE for this collection regardless of the other rules: ${bandBlockText}. The rule was NOT relaxed; lower "units per band" to search anyway.` : `No list found at ${o.points} pts that meets every HARD constraint (>= ${minBand} units passing every toughness band, >= ${minUnits} units, >= ${needTk} tank killers incl. Ballistus AND >= ${needNbTk} non-Ballistus tank killers${needDed > 0 ? ` AND >= ${needDed} dedicated tank killers` : ''}, locks). The rule was NOT relaxed. Closest lists (all other constraints met) follow.`,
     closest: [...nearMiss.values()].map((x) => ({ x, d: bandDeficit(x.bl), s: score(x.bl).total })).sort((a, b) => a.d - b.d || b.s - a.s).slice(0, 3).map(({ x, d, s: sc2 }) => ({
       bandDeficit: d, failingBands: failingBands(x.bl), tankKillers: tkCount(x.bl), score: +sc2.toFixed(4), points: x.pts, units: x.bl.map((b) => `${b.label} (${b.pts})`) })),
     bandCapability: Object.fromEntries(bandRefs.map((r, k) => [r.band, [...new Set(blocks.filter((b) => bandOf(b)[k]).map((b) => b.label.replace(/ \(.*\)$/, '')))].slice(0, 12)])),
-    dedicatedTankKillers: shortCircuit ? dedicatedReport(dedicatedMax) : needDed > 0 ? { required: needDed, achievable: dedicatedMax, qualifyingOwned: dedicatedOwned, message: `Dedicated tank killers available (${dedicatedMax}, need ${needDed}): ${dedicatedOwned.map((x) => `${x.unit} x${x.owned}`).join(', ')}; taking them leaves no list that also meets the other HARD rules (see closest lists).` } : null,
+    dedicatedTankKillers: shortCircuit ? dedicatedReport(dedicatedMax) : needDed > 0 ? { required: needDed, achievable: dedicatedMax, qualifyingOwned: dedicatedOwned, message: `Dedicated tank killers available (${dedicatedMax}, need ${needDed}): ${dedicatedOwned.map((x) => `${x.unit} x${x.owned}`).join(', ')}${bandBlockers.length ? ' (not the binding rule: the toughness-band rule above already rules out every list).' : '; no list was found that also meets the other HARD rules (see closest lists).'}` } : null,
   };
   pruned.locksAndAntiTank = `lists must contain ${locks.map((l) => `${l.name} x${l.count}`).join(', ') || 'no locked units'} and >= ${needTk} tank killers (any) and >= ${needNbTk} non-Ballistus tank killers and >= ${needDed} dedicated tank killers (owned qualifying: ${dedicatedOwned.map((x) => `${x.unit} x${x.owned}`).join(', ') || 'none'}) and >= ${minUnits} units and >= ${minBand} units passing every toughness band (HARD); ${finished.size} finished lists met this`;
   // ---- baselines: given lists scored on the same metric (no search) ----
@@ -541,11 +604,12 @@ export function optimizeCore(cat: CatalogIndex, col: Collection, data: OptimizeD
     });
     for (const b of bs) cells.set(b.cellKey, opp.units.map((u) => cell(b.units, u, autoAb(b))));
     const sc = score(bs);
-    const v = validateRoster(r, cat, { collection: col, pointsLimit: o.points });
+    const v = validateRoster(r, cat, { collection: col, pointsLimit: o.points, houseRules: leeRules });
+    const hard = hardReport(bs, v.issues.filter((i) => i.severity === 'error').map((i) => `${i.code}: ${i.unit ?? ''} ${i.message}`));
     return { file: f, name: r.name, score: +sc.total.toFixed(4), scoreParts: Object.fromEntries(Object.entries(sc.parts).map(([k, x]) => [k, +x.toFixed(4)])), points: bs.reduce((a, b) => a + b.pts, 0),
       units_count: sc.units, enhancements: sc.enhCount, warlord: sc.warlord, warlordSource, tiers: sc.tiers, bands: sc.bands, pregameUnits: sc.pregameUnits, cpPerRound: sc.cpPerRound, tankKillers: sc.tankKillers,
       antiArmour: sc.antiArmour, perMatchup: sc.perList.map((p) => ({ opponent: p.opponent, killCoverage: +p.killCoverage.toFixed(4), uncoveredProfiles: p.uncoveredProfiles })),
-      validation: { ok: v.ok, errors: v.issues.filter((i) => i.severity === 'error').map((i) => `${i.code}: ${i.unit ?? ''} ${i.message}`) } };
+      validation: { ok: v.ok, errors: v.issues.filter((i) => i.severity === 'error').map((i) => `${i.code}: ${i.unit ?? ''} ${i.message}`) }, hard };
   }).sort((a, b) => b.score - a.score);
   progress({ phase: 'done', done: 1, total: 1, message: `${results.length} list(s)` });
   return {
@@ -584,16 +648,18 @@ export function toRoster(bl: Block[], o: OptimizeOptions): Roster {
   const all = [...units.filter((u) => u.attachGroup !== null), ...chars, ...units.filter((u) => u.attachGroup === null)];
   // warlord: Helbrecht if present (Transhuman Strategist, per reference card), else the most expensive character  (HEURISTIC)
   const cands = all.filter((u) => u.attachedAs === 'Leader' || u.attachedAs === 'Support' || u.section === 'CHARACTERS');
-  const wl = warlordPick(cands);
+  const wl = warlordPick(cands, o.warlord);
   if (wl) wl.warlord = true;
   return {
-    format: 'gw-app', sourceFile: null, name: `crucible optimize ${o.mission}`, player: null, faction: o.faction, factionLines: ['Space Marines', o.faction],
+    format: 'gw-app', sourceFile: null, name: `crucible optimize ${o.mission}`, player: null, faction: o.faction, factionLines: SM_CHAPTERS.test(o.faction) && o.faction !== 'Space Marines' ? ['Space Marines', o.faction] : [o.faction],
     detachments: o.detachments, mission: o.disposition ?? (o.mission === 'purge' ? 'Purge the Foe' : 'Take and Hold'), battleSize: `Strike Force (${o.points} points)`, declaredPoints: all.reduce((s, u) => s + (u.pastedPts ?? 0), 0), units: all, warnings: [],
   };
 }
 
 /** HEURISTIC warlord pick: Helbrecht if present (BSData Transhuman Strategist: +1 CP at the start of each battle round if WARLORD), else the first character. */
-export function warlordPick(units: RosterUnit[]): RosterUnit | undefined {
+const SM_CHAPTERS = /^(black templars|blood angels|dark angels|deathwatch|imperial fists|iron hands|raven guard|salamanders|space wolves|ultramarines|white scars|space marines)$/i;
+export function warlordPick(units: RosterUnit[], preferred?: string | null): RosterUnit | undefined {
+  const p = preferred ? units.find((u) => norm(u.name) === norm(preferred)) : undefined; if (p) return p;
   return units.find((u) => /helbrecht/i.test(u.name)) ?? units.find((u) => u.attachedAs === 'Leader' || u.attachedAs === 'Support' || u.section === 'CHARACTERS');
 }
 
@@ -613,7 +679,7 @@ export const TANK_KILLER_THRESHOLD = 0.45; // Tactician decision 2026-10-15 (was
 export const nonBallistusTankKillers = (bl: { label: string; tank: number }[]) => bl.filter((b) => !/ballistus/i.test(b.label) && b.tank >= TANK_KILLER_THRESHOLD).map((b) => b.label);
 export const TANK_KILLER_DEF = 'HEURISTIC: a block is a tank killer if, in one activation (all ranged then all melee, charged, best eligible strat, exact engine), its expected damage averages >= 45% of the target wounds across three BSData T10-12 vehicles: Leman Russ Battle Tank (T11 W13 2+), Chaos Land Raider (T12 W16 2+), Chaos Predator Annihilator (T10 W11 3+). HARD: >= 2 such blocks must be non-Ballistus (a Ballistus block never counts towards that minimum), in addition to --min-tank-killers counting all tank killers.';
 export const DEDICATED_TANK_KILLER_DEF = 'HEURISTIC (Lee rule 2026-10-19, HARD, default --min-dedicated-tank-killers 2): a DEDICATED tank killer is a block whose non-CHARACTER unit, scored alone (attached leaders/supports ignored), passes the same >= 45% wounds test vs the three BSData T10-12 vehicles. Ballistus Dreadnought never counts; INFANTRY is scored on RANGED weapons only, so melee infantry bricks (Crusader Squad, Terminator Assault Squad, Sword Brethren) do not count while e.g. Eradicators can; vehicles/walkers (Repulsor Executioner, Brutalis Dreadnought, Land Raider types) use the full activation.';
-export { MAX_ENHANCEMENTS, enhancementLimit, UPGRADE_MAX_UNITS, isUpgrade, enhancementCopies, EPIC_HERO_OVERRIDES, isEpicHero } from '../validate/houseRules.ts';
+export { MAX_ENHANCEMENTS, enhancementLimit, UPGRADE_MAX_UNITS, isUpgrade, enhancementCopies, EPIC_HERO_OVERRIDES, isEpicHero, enhancementSlots, UPGRADE_SLOT_RULE } from '../validate/houseRules.ts';
 
 /** list-guide.txt step 04 bands, one BSData reference per band (the guide's own examples where BSData has them). */
 export const BAND_REFS = [

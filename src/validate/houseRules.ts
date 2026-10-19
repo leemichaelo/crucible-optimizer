@@ -35,10 +35,26 @@ export function enhancementLimit(points: number): { max: number; source: string 
 /** "(Upgrade)" enhancements: on up to 3 non-CHARACTER units (Lee 2026-10-19; BSData max where it is lower). */
 export const UPGRADE_MAX_UNITS = 3;
 export const isUpgrade = (name: string) => /\(upgrade\)/i.test(name);
-export function enhancementCopies(e: { name: string; maxPerRoster: number | null } | undefined): number {
+/**
+ * Upgrade test on a BSData enhancement entry: "(Upgrade)" in the name (Space Marine data) OR rules text opening with "... unit only."
+ * (BSData d506fcc names Ork Upgrades without the suffix, e.g. Targetin' Gizmos: "WAGON unit only."; character enhancements say "model only").
+ */
+export type EnhLike = string | { name: string; text?: string };
+export const isUpgradeEnh = (e: EnhLike) => typeof e === 'string' ? isUpgrade(e) : isUpgrade(e.name) || /^[^.\n]*\bunit only\b/i.test((e.text ?? '').replace(/\*/g, ''));
+export function enhancementCopies(e: { name: string; text?: string; maxPerRoster: number | null } | undefined): number {
   if (!e) return 1;
-  return isUpgrade(e.name) ? Math.min(e.maxPerRoster ?? UPGRADE_MAX_UNITS, UPGRADE_MAX_UNITS) : (e.maxPerRoster ?? 1);
+  return isUpgradeEnh(e) ? Math.min(e.maxPerRoster ?? UPGRADE_MAX_UNITS, UPGRADE_MAX_UNITS) : (e.maxPerRoster ?? 1);
 }
+/**
+ * Enhancement SLOTS used (Munitorum ruling relayed by Tactician 2026-10-19): all copies of the SAME "(Upgrade)" enhancement
+ * (up to UPGRADE_MAX_UNITS units) together use ONE slot, each copy still paid; every other enhancement uses one slot.
+ */
+export function enhancementSlots(names: readonly EnhLike[]): number {
+  const up = new Set<string>(); let other = 0;
+  for (const n of names) if (isUpgradeEnh(n)) up.add(norm(typeof n === 'string' ? n : n.name)); else other++;
+  return up.size + other;
+}
+export const UPGRADE_SLOT_RULE = 'Munitorum ruling 2026-10-19: up to 3 copies of the SAME Upgrade together use ONE enhancement slot (each copy paid)';
 /** Named characters whose BSData d506fcc datasheet lacks the EPIC HERO keyword (data gap): Chaplain Grimaldus is an Epic Hero on his datasheet. */
 export const EPIC_HERO_OVERRIDES = ['Chaplain Grimaldus'];
 export const isEpicHero = (e: { name: string; keywords: string[] }) => e.keywords.some((k) => /^epic hero$/i.test(k)) || EPIC_HERO_OVERRIDES.some((n) => norm(n) === norm(e.name));
