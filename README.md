@@ -25,9 +25,11 @@ against every hard rule as a baseline (`# baseline ...` lines in best.txt).
   (infantry must pass on ranged weapons alone; e.g. Repulsor Executioner, Brutalis Dreadnought, Eradicators, Land Raiders),
   each passing the >= 45% wounds test vs T10-12 vehicles. Can be unticked or changed on the page. If the collection cannot
   satisfy it, the page says so and lists the qualifying owned units.
-- HARD: at least 2 units able to remove 80+ points (expected, one activation) of a target in every toughness band (list-building
-  checklist; a single-model target counts only when killed, so it is P(kill) x points), >= 11 units on the table (an attached
-  unit counts once). If a band can never get 2 passers from the unit pool, the page says which band and which units could pass.
+- HARD: at least 2 units able to remove 80+ points of a target in every toughness band in one activation. HEURISTIC encoding of the
+  guide's step 04 ("At least two units for every toughness band: units that can remove 80+ points of a target in that band in one
+  activation."): points removed = min(1, expected wounds / target total wounds) x target points (Lee 2026-10-19), threshold 80
+  (adjustable), capped at 80% of a reference unit that costs under 100.
+- Unit count is a SOFT HEURISTIC score term (guide: "about 13 units on the table"), not an 11e rule; `--min-units N` adds a hard floor. If a band can never get 2 passers from the unit pool, the page says which band and which units could pass.
 - Up to 3 detachments, total checked against the BSData Detachment Points limit (Strike Force 3).
 - Search: beam width 80, 5 leader/support combos per bodyguard, then a hill-climb polish of the top 5 lists.
 

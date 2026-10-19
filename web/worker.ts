@@ -86,7 +86,7 @@ ctx.onmessage = async (ev: MessageEvent) => {
       const run = runOptimizeCore(cat, {
         army: r.army, detachment: det, disposition: r.disposition,
         input: r.input.trim() ? { text: r.input, name: 'pasted text' } : null,
-        base: { ...WEB_BASE, minDedicatedTankKillers: r.minDedicatedTankKillers, minBandUnits: r.minBandUnits, beamWidth: r.beamWidth, points: r.points, minPoints: r.points - 50, warlord: r.warlord.trim() || null },
+        base: { ...WEB_BASE, minDedicatedTankKillers: r.minDedicatedTankKillers, minBandUnits: r.minBandUnits, bandThreshold: r.bandThreshold, beamWidth: r.beamWidth, points: r.points, minPoints: r.points - 50, warlord: r.warlord.trim() || null },
       }, data, { cache, onProgress: (p: RunProgress) => { const now = performance.now(); if (now - last > 150 || p.phase === 'done') { last = now; ctx.postMessage({ type: 'progress', p, elapsedMs: Math.round(now - t0) }); } } });
       const elapsedMs = Math.round(performance.now() - t0);
       const best = bestText(run);

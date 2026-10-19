@@ -13,6 +13,7 @@ import { emptyUnit } from '../roster/types.ts';
 import { MemoryCellCache, type CellStore } from './cellCache.ts';
 import type { Collection } from '../validate/collectionCore.ts';
 import { validateRoster, wargearCost } from '../validate/validator.ts';
+import { bandPasses, bandThreshold, bandPoints, totalWounds, BAND_DEF, BAND_THRESHOLD } from './bands.ts';
 import { LEE_RULES, SWORD_BRETHREN, CRUSADER_SQUAD, swordBrethrenCap, enhancementLimit, UPGRADE_MAX_UNITS, isUpgrade, enhancementCopies, EPIC_HERO_OVERRIDES, isEpicHero, enhancementSlots, UPGRADE_SLOT_RULE, isUpgradeEnh } from '../validate/houseRules.ts';
 import { buildTemplates, type Template } from './templates.ts';
 import { weaponSlots } from '../engine/build.ts';
@@ -43,6 +44,8 @@ export interface OptimizeOptions {
   minUnits?: number;
   /** Local polish after the beam: how many top finished lists to hill-climb with single-block swaps/additions (default 5, 0 disables). */
   polishTop?: number;
+  /** Toughness-band threshold in points (default 80; see BAND_DEF). */
+  bandThreshold?: number;
   /** Lee's house rules (no unattached characters, Sword Brethren cap...). Default true; false for other factions / opponent lists. */
   leeHouseRules?: boolean;
   /** Warlord (e.g. auto-filled from a pasted list): locked into every list (x1) and chosen as WARLORD. */
@@ -145,7 +148,7 @@ export function optimizeCore(cat: CatalogIndex, col: Collection, data: OptimizeD
     return { band: r.band, ref: { id: `band:${r.band}`, list: 'ref', label: `${e.name} x${r.models}`, pts: pointsFor(e, r.models) ?? e.pts ?? 0, def, models: r.models } as OppUnit }; });
   const band = new Map<string, boolean[]>();
   const bandOf = (b: Block) => {
-    if (!band.has(b.cellKey)) band.set(b.cellKey, bandRefs.map(({ ref }) => cell(b.units, ref, autoAb(b)).ptsRemoved >= Math.min(80, 0.8 * ref.pts)));
+    if (!band.has(b.cellKey)) band.set(b.cellKey, bandRefs.map(({ ref }) => bandPasses(cell(b.units, ref, autoAb(b)), ref, o.bandThreshold ?? BAND_THRESHOLD)));
     return band.get(b.cellKey)!;
   };
   // ---- blocks ----
@@ -446,8 +449,10 @@ export function optimizeCore(cat: CatalogIndex, col: Collection, data: OptimizeD
   const tkCount = (bl: Block[]) => nonBallistusTankKillers(bl.map((b) => ({ label: b.label, tank: tankOf(b) }))).length;
   const dedCount = (bl: Block[]) => bl.filter(isDedicated).length;
   const tkDeficit = (bl: Block[]) => Math.max(0, needTk - tkAll(bl)) + Math.max(0, needNbTk - tkCount(bl)) + 2 * Math.max(0, needDed - dedCount(bl));
-  const rankKey = (bl: Block[]) => score(bl).total - 0.5 * missing(bl) - 0.05 * tkDeficit(bl) - 0.03 * Math.max(0, minUnits - bl.length) - 0.04 * bandDeficit(bl);
-  const minUnits = o.minUnits ?? 11;
+  // search guidance only (not a constraint): partial lists below ~11 units rank slightly lower so the beam keeps unit-rich lists alive; the guide says "about 13 units on the table".
+  const rankKey = (bl: Block[]) => score(bl).total - 0.5 * missing(bl) - 0.05 * tkDeficit(bl) - 0.03 * Math.max(0, (minUnits || 11) - bl.length) - 0.04 * bandDeficit(bl);
+  // Unit count is a SOFT score term (unitCount, HEURISTIC from the guide's "about 13 units on the table"); a hard floor only with --min-units N.
+  const minUnits = o.minUnits ?? 0;
   const minBand = o.minBandUnits ?? 2;
   const bandDeficit = (bl: Block[]) => bandRefs.reduce((a, _, k) => a + Math.max(0, minBand - bl.filter((b) => bandOf(b)[k]).length), 0);
   const failingBands = (bl: Block[]) => bandRefs.filter((_, k) => bl.filter((b) => bandOf(b)[k]).length < minBand).map((r, k) => `${r.band} (${bl.filter((b) => bandOf(b)[bandRefs.indexOf(r)]).length})`);
@@ -458,7 +463,7 @@ export function optimizeCore(cat: CatalogIndex, col: Collection, data: OptimizeD
     const bands = bandRefs.map(({ band: bn }, k) => ({ band: bn, passers: bl.filter((b) => bandOf(b)[k]).map((b) => b.label), need: minBand }));
     const checks = [
       { rule: `points <= ${o.points}`, value: pts, ok: pts <= o.points },
-      { rule: `>= ${minUnits} units on the table (an attached unit counts once)`, value: bl.length, ok: bl.length >= minUnits },
+      ...(minUnits > 0 ? [{ rule: `>= ${minUnits} units on the table (an attached unit counts once; --min-units)`, value: bl.length, ok: bl.length >= minUnits }] : []),
       ...bands.map((x) => ({ rule: `>= ${minBand} units pass band ${x.band}`, value: x.passers.length, detail: x.passers, ok: x.passers.length >= minBand })),
       { rule: `>= ${needTk} tank killers (any, 45% test)`, value: tkAll(bl), detail: bl.filter((b) => tankOf(b) >= TANK_KILLER_THRESHOLD).map((b) => `${b.label} ${tankOf(b).toFixed(3)}`), ok: tkAll(bl) >= needTk },
       { rule: `>= ${needNbTk} non-Ballistus tank killers`, value: tkCount(bl), ok: tkCount(bl) >= needNbTk },
@@ -580,17 +585,17 @@ export function optimizeCore(cat: CatalogIndex, col: Collection, data: OptimizeD
     return { max: best.length, capable: [...new Set(cap.map((b) => b.label.replace(/ \(.*\)$/, '')))] };
   };
   const bandBlockers = finished.size ? [] : bandRefs.map((r, k) => ({ band: r.band, ref: r.ref.label, ...bandCeiling(k) })).filter((x) => x.max < minBand);
-  const bandBlockText = bandBlockers.map((x) => `toughness band ${x.band} (ref ${x.ref}, pass = >= ${Math.min(80, 0.8 * (bandRefs.find((r) => r.band === x.band)!.ref.pts)).toFixed(0)} expected points removed in one activation): at most ${x.max} owned unit(s) can pass together, ${minBand} required. Units able to pass: ${x.capable.join('; ') || 'none'}`).join(' | ');
+  const bandBlockText = bandBlockers.map((x) => `toughness band ${x.band} (ref ${x.ref}, pass = share of wounds x points >= ${bandThreshold(bandRefs.find((r) => r.band === x.band)!.ref.pts, o.bandThreshold ?? BAND_THRESHOLD).toFixed(0)} in one activation; HEURISTIC): at most ${x.max} owned unit(s) can pass together, ${minBand} required. Units able to pass: ${x.capable.join('; ') || 'none'}`).join(' | ');
   const tankTable = Object.fromEntries([...new Map(blocks.filter((b) => b.units.length === 1 && !b.enhancement).map((b) => [b.label, +tankOf(b).toFixed(3)])).entries()].sort((a, b) => b[1] - a[1]));
   const infeasibility = finished.size ? null : {
     bindingRules: bandBlockers.length ? bandBlockers.map((x) => `band ${x.band}: max ${x.max} < ${minBand}`) : null,
-    message: shortCircuit ? dedicatedReport(dedicatedMax)!.message : bandBlockers.length ? `INFEASIBLE for this collection regardless of the other rules: ${bandBlockText}. The rule was NOT relaxed; lower "units per band" to search anyway.` : `No list found at ${o.points} pts that meets every HARD constraint (>= ${minBand} units passing every toughness band, >= ${minUnits} units, >= ${needTk} tank killers incl. Ballistus AND >= ${needNbTk} non-Ballistus tank killers${needDed > 0 ? ` AND >= ${needDed} dedicated tank killers` : ''}, locks). The rule was NOT relaxed. Closest lists (all other constraints met) follow.`,
+    message: shortCircuit ? dedicatedReport(dedicatedMax)!.message : bandBlockers.length ? `INFEASIBLE for this collection regardless of the other rules: ${bandBlockText}. The rule was NOT relaxed; lower "units per band" to search anyway.` : `No list found at ${o.points} pts that meets every HARD constraint (>= ${minBand} units passing every toughness band${minUnits > 0 ? `, >= ${minUnits} units` : ''}, >= ${needTk} tank killers incl. Ballistus AND >= ${needNbTk} non-Ballistus tank killers${needDed > 0 ? ` AND >= ${needDed} dedicated tank killers` : ''}, locks). The rule was NOT relaxed. Closest lists (all other constraints met) follow.`,
     closest: [...nearMiss.values()].map((x) => ({ x, d: bandDeficit(x.bl), s: score(x.bl).total })).sort((a, b) => a.d - b.d || b.s - a.s).slice(0, 3).map(({ x, d, s: sc2 }) => ({
       bandDeficit: d, failingBands: failingBands(x.bl), tankKillers: tkCount(x.bl), score: +sc2.toFixed(4), points: x.pts, units: x.bl.map((b) => `${b.label} (${b.pts})`) })),
     bandCapability: Object.fromEntries(bandRefs.map((r, k) => [r.band, [...new Set(blocks.filter((b) => bandOf(b)[k]).map((b) => b.label.replace(/ \(.*\)$/, '')))].slice(0, 12)])),
     dedicatedTankKillers: shortCircuit ? dedicatedReport(dedicatedMax) : needDed > 0 ? { required: needDed, achievable: dedicatedMax, qualifyingOwned: dedicatedOwned, message: `Dedicated tank killers available (${dedicatedMax}, need ${needDed}): ${dedicatedOwned.map((x) => `${x.unit} x${x.owned}`).join(', ')}${bandBlockers.length ? ' (not the binding rule: the toughness-band rule above already rules out every list).' : '; no list was found that also meets the other HARD rules (see closest lists).'}` } : null,
   };
-  pruned.locksAndAntiTank = `lists must contain ${locks.map((l) => `${l.name} x${l.count}`).join(', ') || 'no locked units'} and >= ${needTk} tank killers (any) and >= ${needNbTk} non-Ballistus tank killers and >= ${needDed} dedicated tank killers (owned qualifying: ${dedicatedOwned.map((x) => `${x.unit} x${x.owned}`).join(', ') || 'none'}) and >= ${minUnits} units and >= ${minBand} units passing every toughness band (HARD); ${finished.size} finished lists met this`;
+  pruned.locksAndAntiTank = `lists must contain ${locks.map((l) => `${l.name} x${l.count}`).join(', ') || 'no locked units'} and >= ${needTk} tank killers (any) and >= ${needNbTk} non-Ballistus tank killers and >= ${needDed} dedicated tank killers (owned qualifying: ${dedicatedOwned.map((x) => `${x.unit} x${x.owned}`).join(', ') || 'none'}) ${minUnits > 0 ? `and >= ${minUnits} units ` : ''}and >= ${minBand} units passing every toughness band (HARD; ${BAND_DEF}); ${finished.size} finished lists met this`;
   // ---- baselines: given lists scored on the same metric (no search) ----
   const baselines = (data.baselines ?? []).map(({ file: f, text }) => {
     const r = parseList(text, { catalog: cat, sourceFile: f });
@@ -617,7 +622,7 @@ export function optimizeCore(cat: CatalogIndex, col: Collection, data: OptimizeD
     collection: { path: col.path, status: col.status }, opponents: opp.lists.map((l) => ({ file: l.file, faction: l.roster.faction, units: opp.units.filter((u) => u.list === l.file).length })),
     weights: WEIGHTS, templates: templates.map((t) => ({ key: t.key, source: t.loadoutSource, note: t.note })), templateNotes: tnotes,
     cache: (cache.save(), cache.stats()), pruned, runtimeMs: { total: Date.now() - t0, exactCells: cellMs, search: searchMs }, counts: { blocks: blocks.length, opponentUnits: opp.units.length, exactCells: blocks.length * opp.units.length },
-    infeasibility, tankKillerDefinition: TANK_KILLER_DEF, dedicatedTankKillerDefinition: DEDICATED_TANK_KILLER_DEF, dedicatedTankKillers: dedicatedReport(Math.min(dedicatedMax, needDed)), tankScoreSoloBlocks: tankTable, results, baselines, heuristics: [...new Set(notes.heuristics)].slice(0, 200), warnings: [...new Set(notes.warnings)].slice(0, 200),
+    infeasibility, bandDefinition: BAND_DEF, tankKillerDefinition: TANK_KILLER_DEF, dedicatedTankKillerDefinition: DEDICATED_TANK_KILLER_DEF, dedicatedTankKillers: dedicatedReport(Math.min(dedicatedMax, needDed)), tankScoreSoloBlocks: tankTable, results, baselines, heuristics: [...new Set(notes.heuristics)].slice(0, 200), warnings: [...new Set(notes.warnings)].slice(0, 200),
   };
 }
 

@@ -64,7 +64,7 @@ $('f').onsubmit = (e) => {
   e.preventDefault(); if (running) return;
   const req: RunRequest = { army: army.value, detachment: det.value, detachment2: det.value === 'all' ? '' : det2.value, detachment3: det.value === 'all' ? '' : det3.value, points: Number($<HTMLSelectElement>('points').value) || 2000, warlord: $<HTMLInputElement>('warlord').value, disposition: disp.value, input: $<HTMLTextAreaElement>('input').value,
     minDedicatedTankKillers: $<HTMLInputElement>('dedOn').checked ? Math.max(1, Number($<HTMLInputElement>('ded').value) || 2) : 0,
-    minBandUnits: Math.max(0, Number($<HTMLInputElement>('band').value) || 0), beamWidth: Math.max(5, Number($<HTMLInputElement>('beam').value) || 80) };
+    minBandUnits: Math.max(0, Number($<HTMLInputElement>('band').value) || 0), bandThreshold: Math.max(1, Number($<HTMLInputElement>('bandPts').value) || 80), beamWidth: Math.max(5, Number($<HTMLInputElement>('beam').value) || 80) };
   running = true; runBtn.disabled = true; prog.hidden = false; bar.removeAttribute('value'); phase.textContent = 'starting'; status.textContent = 'Running in a Web Worker…';
   t0 = performance.now(); timer = window.setInterval(() => { elapsed.textContent = `${((performance.now() - t0) / 1000).toFixed(1)} s`; }, 200);
   worker.postMessage({ type: 'run', req });
