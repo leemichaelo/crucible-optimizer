@@ -238,25 +238,34 @@ export function bestModel(line: string, names: string[]): string | null {
   return best;
 }
 
-/** Sum BSData wargear costs for a roster unit, scoping each item to the best-matching model entry. */
+/**
+ * Sum BSData wargear costs for a roster unit, scoping each item to the best-matching model entry.
+ * Gear that cannot be tied to one BSData model entry (flattened pastes, unit-level gear, a pasted model name that matches none)
+ * is ALLOCATED across the unit's BSData model entries that carry the item: at most one copy on a leader model (Sergeant etc.),
+ * the rest on the other models, each copy priced at its own model's BSData cost. (Bug fix 2026-10-20: this path used to take the
+ * max cost of the item over ALL model entries for every copy, e.g. Terminator Assault Squad 5x Thunder Hammer + 5x Storm Shield
+ * priced 5x5 + 5x5 = 50 instead of the BSData 5 (Sergeant hammer) + 4x5 (shields) = 25, so 230 instead of 205 with Furious Assault.)
+ * HEURISTIC (allocation only; every price is a BSData cost): leader models take at most one copy.
+ */
 export function wargearCost(u: RosterUnit, table: { model: string; item: string; pts: number }[]): number {
   let total = 0;
-  const models = [...new Set(table.map((t) => t.model))];
+  const isLead = (n: string) => /sergeant|leader|exarch|champion|nob\b|boss|superior/i.test(n);
   const lines = [...u.models.map((m) => ({ model: m.name, gear: m.wargear })), { model: '', gear: u.unitWargear }];
   for (const l of lines) {
     for (const g of l.gear) {
       const cands = table.filter((t) => norm(t.item) === norm(g.name));
       if (!cands.length) continue;
-      let pick = cands;
-      if (l.model) {
-        // models that carry this item, scored against the pasted model name
-        const bm = bestModel(l.model, [...new Set(cands.map((c) => c.model))].filter(Boolean));
-        if (bm) pick = cands.filter((c) => c.model === bm);
-      }
-      // Within one model, BSData sometimes splits a combo (e.g. TH&SS) across two items; take the max per item.
-      total += Math.max(...pick.map((c) => c.pts)) * Math.max(1, g.count);
+      const n = Math.max(1, g.count);
+      const bm = l.model ? bestModel(l.model, [...new Set(cands.map((c) => c.model))].filter(Boolean)) : null;
+      if (bm) { total += Math.max(...cands.filter((c) => c.model === bm).map((c) => c.pts)) * n; continue; }
+      const byModel = new Map<string, number>();
+      for (const c of cands) byModel.set(c.model, Math.max(byModel.get(c.model) ?? 0, c.pts));
+      if (byModel.size === 1) { total += [...byModel.values()][0]! * n; continue; }
+      const lead = [...byModel].filter(([m]) => isLead(m)); const rank = [...byModel].filter(([m]) => !isLead(m));
+      let left = n;
+      if (lead.length && (!rank.length || u.modelCount > 1 || n === 1)) { total += lead[0]![1]; left--; }
+      if (left > 0) total += (rank.length ? Math.min(...rank.map(([, p]) => p)) : Math.min(...lead.map(([, p]) => p))) * left;
     }
   }
-  void models;
   return total;
 }

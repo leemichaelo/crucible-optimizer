@@ -13,6 +13,7 @@ import { emptyUnit } from '../roster/types.ts';
 import { MemoryCellCache, type CellStore } from './cellCache.ts';
 import type { Collection } from '../validate/collectionCore.ts';
 import { validateRoster, wargearCost } from '../validate/validator.ts';
+import { isExcluded } from '../select/excludes.ts';
 import { bandPasses, bandThreshold, bandPoints, totalWounds, BAND_DEF, BAND_THRESHOLD } from './bands.ts';
 import { LEE_RULES, SWORD_BRETHREN, CRUSADER_SQUAD, swordBrethrenCap, enhancementLimit, UPGRADE_MAX_UNITS, isUpgrade, enhancementCopies, EPIC_HERO_OVERRIDES, isEpicHero, enhancementSlots, UPGRADE_SLOT_RULE, isUpgradeEnh } from '../validate/houseRules.ts';
 import { buildTemplates, type Template } from './templates.ts';
@@ -31,6 +32,8 @@ export interface OptimizeOptions {
   mission: string;
   loadoutList: string | null;
   locks?: { name: string; count: number; models?: number }[];
+  /** Datasheets never fielded (exact BSData names; see src/select/excludes.ts). */
+  exclude?: string[];
   baselines?: string[];
   /** Tank killers of any kind, Ballistus included (default 2). */
   minTankKillers?: number;
@@ -108,6 +111,11 @@ export function optimizeCore(cat: CatalogIndex, col: Collection, data: OptimizeD
   const pruned: Record<string, number | string> = {};
   const exportRoster = data.loadout ? parseList(data.loadout.text, { catalog: cat, sourceFile: data.loadout.file }) : null;
   const { templates, notes: tnotes } = buildTemplates(cat, col, o.faction, exportRoster, (o.locks ?? []).filter((l) => l.models !== undefined && !l.name.includes('+')).map((l) => ({ name: l.name, models: l.models! })));
+  if (o.exclude?.length) {
+    const before = templates.length;
+    for (let i = templates.length - 1; i >= 0; i--) if (isExcluded(o.exclude, templates[i]!.entry.name)) templates.splice(i, 1);
+    pruned.excluded = `exclude list [${o.exclude.join(', ')}] removed ${before - templates.length} template(s)${o.exclude.filter((x) => !cat.cat.units.some((u) => norm(u.name) === norm(x))).map((x) => `; "${x}" is not a BSData datasheet name`).join('')}`;
+  }
   if (o.chapterLocked) {
     const own = cat.scope(o.faction)[0];
     const before = templates.length;
@@ -471,7 +479,7 @@ export function optimizeCore(cat: CatalogIndex, col: Collection, data: OptimizeD
       { rule: 'locks', value: missing(bl), ok: missing(bl) === 0 },
       { rule: 'validator (ownership, datasheet limits, enhancements, house rules)', value: validatorErrors.length, detail: validatorErrors, ok: validatorErrors.length === 0 },
     ];
-    return { feasible: checks.every((c) => c.ok), failing: checks.filter((c) => !c.ok).map((c) => `${c.rule}: ${c.value}`), checks };
+    return { feasible: checks.every((c) => c.ok), failing: checks.filter((c) => !c.ok).flatMap((c) => c.rule.startsWith('validator') ? validatorErrors.map((e) => `validator ${e}`) : [`${c.rule}: ${c.value}`]), checks };
   };
   const nearMiss = new Map<string, { bl: Block[]; pts: number }>();
   // can this partial list still reach minUnits within the points cap? (greedy cheapest legal additions; lookahead prune)
@@ -610,11 +618,11 @@ export function optimizeCore(cat: CatalogIndex, col: Collection, data: OptimizeD
     for (const b of bs) cells.set(b.cellKey, opp.units.map((u) => cell(b.units, u, autoAb(b))));
     const sc = score(bs);
     const v = validateRoster(r, cat, { collection: col, pointsLimit: o.points, houseRules: leeRules });
-    const hard = hardReport(bs, v.issues.filter((i) => i.severity === 'error').map((i) => `${i.code}: ${i.unit ?? ''} ${i.message}`));
+    const hard = hardReport(bs, v.issues.filter((i) => i.severity === 'error').map((i) => `${i.code}${i.unit ? ` [${i.unit}]` : ''}: ${i.message}`));
     return { file: f, name: r.name, score: +sc.total.toFixed(4), scoreParts: Object.fromEntries(Object.entries(sc.parts).map(([k, x]) => [k, +x.toFixed(4)])), points: bs.reduce((a, b) => a + b.pts, 0),
       units_count: sc.units, enhancements: sc.enhCount, warlord: sc.warlord, warlordSource, tiers: sc.tiers, bands: sc.bands, pregameUnits: sc.pregameUnits, cpPerRound: sc.cpPerRound, tankKillers: sc.tankKillers,
       antiArmour: sc.antiArmour, perMatchup: sc.perList.map((p) => ({ opponent: p.opponent, killCoverage: +p.killCoverage.toFixed(4), uncoveredProfiles: p.uncoveredProfiles })),
-      validation: { ok: v.ok, errors: v.issues.filter((i) => i.severity === 'error').map((i) => `${i.code}: ${i.unit ?? ''} ${i.message}`) }, hard };
+      validation: { ok: v.ok, errors: v.issues.filter((i) => i.severity === 'error').map((i) => `${i.code}${i.unit ? ` [${i.unit}]` : ''}: ${i.message}`) }, hard };
   }).sort((a, b) => b.score - a.score);
   progress({ phase: 'done', done: 1, total: 1, message: `${results.length} list(s)` });
   return {

@@ -1,6 +1,6 @@
 /** Unified roster model produced by every parser. */
 
-export type RosterFormat = 'gw-app' | 'bcp' | 'newrecruit-text' | 'newrecruit-json' | 'unknown';
+export type RosterFormat = 'gw-app' | 'bcp' | 'newrecruit-text' | 'newrecruit-markdown' | 'newrecruit-json' | 'unknown';
 
 export interface WargearLine { name: string; count: number; }
 

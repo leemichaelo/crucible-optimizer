@@ -14,6 +14,9 @@ import type { StratagemFile } from '../src/rules/stratagemsCore.ts';
 import { WEB_BASE } from '../src/web/options.ts';
 import { autofillFromText } from '../src/web/autofill.ts';
 import type { RunRequest } from './types.ts';
+import { EXCLUDE_PRESETS } from '../src/select/excludes.ts';
+import { toGwAppText } from '../src/export/gwapp.ts';
+import { norm } from '../src/bsdata/parse.ts';
 
 
 const ctx = self as unknown as DedicatedWorkerGlobalScope;
@@ -57,6 +60,25 @@ function loadShared(): Promise<RunData> {
   })();
 }
 
+async function excludable(cat: CatalogIndex, army: string): Promise<string[]> {
+  const data = await loadShared(); const scope = cat.scope(army);
+  const owned = data.collection.units.map((u) => cat.findUnit(u.name, scope)?.name).filter((x): x is string => !!x);
+  return [...new Set([...owned, ...EXCLUDE_PRESETS.flatMap((p) => p.units)])].sort((a, b) => a.localeCompare(b));
+}
+type BaselineRow = { name: string | null; file: string; score: number; points: number; hard: { feasible: boolean; failing: string[] } };
+type ResultRow = { score: number; points: number; units_count: number; enhancements: string[]; units: { block: string; pts: number }[]; roster: never };
+/** Top 10 lists over every detachment run, by score (each with its own 40k-App text for download). */
+function topLists(run: ReturnType<typeof runOptimizeCore>) {
+  return run.per.flatMap((p) => (p.res.results as ResultRow[]).map((x) => ({ detachments: p.detachments.join(' + '), score: x.score, points: x.points, units: x.units_count, unitList: x.units.map((u) => `${u.block} (${u.pts})`), enhancements: x.enhancements, text: toGwAppText(x.roster) })))
+    .sort((a, b) => b.score - a.score).slice(0, 10).map((x, i) => ({ rank: i + 1, ...x }));
+}
+/** Where the unit pool comes from (shown on the page). */
+function poolNote(r: RunRequest, ownedDatasheets: number): string {
+  const pasted = !!r.input.trim();
+  if (norm(r.army) === norm(manifest!.defaults.army)) return `Unit pool: Lee's collection (2026-10-15, ${ownedDatasheets} owned entries; owned-model caps)${pasted ? '. The pasted list only supplies wargear and is scored as the baseline' : " with Lee's list export as the wargear source"}.`;
+  return pasted ? `Unit pool: the pasted list (its units, copies and models; Lee's collection and house rules are not applied to ${r.army}).` : `Unit pool: Lee's collection, limited to units ${r.army} can field (paste a ${r.army} list to use its units).`;
+}
+
 ctx.onmessage = async (ev: MessageEvent) => {
   const m = ev.data as { type: string; army?: string; req?: RunRequest; dataUrl?: string; text?: string; seq?: number };
   try {
@@ -68,7 +90,9 @@ ctx.onmessage = async (ev: MessageEvent) => {
       const t = performance.now();
       const cat = await loadArmy(m.army!);
       ctx.postMessage({ type: 'army', army: m.army, loadMs: Math.round(performance.now() - t), units: cat.cat.units.length,
-        detachments: detachmentsFor(cat, m.army!).map((d) => ({ name: d.name, dispositions: d.dispositions, dp: d.detachmentPoints })) });
+        detachments: detachmentsFor(cat, m.army!).map((d) => ({ name: d.name, dispositions: d.dispositions, dp: d.detachmentPoints })),
+        // exclude checkboxes: Lee's owned datasheets this army can field (BSData names) plus every saved preset's units
+        excludable: await excludable(cat, m.army!) });
     } else if (m.type === 'parse') {
       // header-level parse needs only the common shard (catalogues, detachments, enhancements); units come from the current army if loaded
       common ??= json<CommonShard>(manifest!.common);
@@ -86,7 +110,7 @@ ctx.onmessage = async (ev: MessageEvent) => {
       const run = runOptimizeCore(cat, {
         army: r.army, detachment: det, disposition: r.disposition,
         input: r.input.trim() ? { text: r.input, name: 'pasted text' } : null,
-        base: { ...WEB_BASE, minDedicatedTankKillers: r.minDedicatedTankKillers, minBandUnits: r.minBandUnits, bandThreshold: r.bandThreshold, beamWidth: r.beamWidth, points: r.points, minPoints: r.points - 50, warlord: r.warlord.trim() || null },
+        base: { ...WEB_BASE, minDedicatedTankKillers: r.minDedicatedTankKillers, minBandUnits: r.minBandUnits, bandThreshold: r.bandThreshold, beamWidth: r.beamWidth, points: r.points, minPoints: r.points - 50, warlord: r.warlord.trim() || null, exclude: r.exclude ?? [] },
       }, data, { cache, onProgress: (p: RunProgress) => { const now = performance.now(); if (now - last > 150 || p.phase === 'done') { last = now; ctx.postMessage({ type: 'progress', p, elapsedMs: Math.round(now - t0) }); } } });
       const elapsedMs = Math.round(performance.now() - t0);
       const best = bestText(run);
@@ -100,6 +124,10 @@ ctx.onmessage = async (ev: MessageEvent) => {
           dedicatedTankKillers: top?.dedicatedTankKillers ?? [], tankKillers: top?.tankKillers ?? [],
           gaps: w?.gaps ?? [], infeasible: run.per.filter((p) => !p.best).map((p) => infeasibilityText(p.detachments, p.res.infeasibility as never)).join(''),
           cache: { entriesBefore: cachedBefore, entriesAfter: cache.size },
+          top: topLists(run),
+          baselines: run.per.flatMap((p) => (p.res.baselines as BaselineRow[]).map((b) => ({ detachments: p.detachments.join(' + '), name: b.name || b.file, score: b.score, points: b.points, feasible: b.hard.feasible, failing: b.hard.failing }))),
+          pool: poolNote(r, data.collection.units.length),
+          excluded: r.exclude ?? [],
         },
       });
       if (cache.size !== cachedBefore) void idbPut(cacheKey(), cache.toJSON());

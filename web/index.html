@@ -25,7 +25,7 @@
     </div>
     <p class="hint" id="parsenote" hidden></p>
     <p class="hint" id="dethint"></p>
-    <label class="block">Paste a list (40k App / BCP / New Recruit) or a collection JSON <span class="muted">(optional; empty = Lee's collection, 2026-10-15). A pasted list auto-fills army, detachments, disposition, points and warlord; for an army other than Black Templars the pasted list is the unit pool (Lee's collection limits and house rules are not applied).</span>
+    <label class="block">Paste a list (40k app / BCP / New Recruit text or markdown) or a collection JSON <span class="muted">(optional; empty = Lee's collection, 2026-10-15). A pasted list auto-fills army, detachments, disposition, points and warlord; for an army other than Black Templars the pasted list is the unit pool (Lee's collection limits and house rules are not applied).</span>
       <textarea id="input" rows="8" placeholder="Leave empty to use Lee's collection (owned-model caps) and Lee's list export (wargear)."></textarea>
     </label>
     <fieldset>
@@ -38,18 +38,31 @@
       <label class="inline">Beam width <input type="number" id="beam" value="80" min="5" max="200" step="5"></label>
       <span class="muted">(wider = slower, sometimes finds more)</span>
     </fieldset>
+    <fieldset>
+      <legend>Exclude units</legend>
+      <label class="inline">Saved preset <select id="exPreset"><option value="">(none)</option></select></label>
+      <button type="button" id="exApply">Apply preset</button> <button type="button" id="exClear">Clear</button>
+      <span class="muted">(ticked datasheets are never fielded; exact BSData names, so "Captain" is the plain Captain only; your choice is saved in this browser)</span>
+      <div id="excl" class="checks"></div>
+    </fieldset>
     <div class="actions">
       <button id="run" type="submit" disabled>Run optimizer</button>
       <span id="status" class="muted">Loading data…</span>
     </div>
     <div id="progress" hidden>
       <progress id="bar" max="100" value="0"></progress>
-      <span id="phase"></span> · <span id="elapsed">0.0 s</span>
+      <span id="phase"></span> · <span id="elapsed">0.0 s</span> · <span id="eta">ETA estimating…</span>
     </div>
   </form>
   <section id="out" hidden>
     <h2>Result <span id="took" class="muted"></span></h2>
+    <div id="baseline"></div>
+    <p class="hint" id="pool"></p>
     <div id="summary"></div>
+    <h3>Top 10 lists</h3>
+    <p class="hint" id="topnote"></p>
+    <table id="top"><thead><tr><th>#</th><th>Score (HEURISTIC)</th><th>Points</th><th>Units</th><th>Enhancements</th><th>Detachments</th><th></th></tr></thead><tbody></tbody></table>
+    <h3>Best list</h3>
     <textarea id="best" rows="28" readonly></textarea>
     <div class="actions"><button id="dl" type="button">Download best.txt</button> <button id="copy" type="button">Copy</button></div>
     <details><summary>Rules gaps and notes for this run</summary><pre id="gaps"></pre></details>

@@ -1,6 +1,6 @@
 /** Paste -> form auto-fill (pure): parse a pasted list with the roster parser and map it onto army / detachments / disposition / points / warlord. */
 import type { CatalogIndex } from '../catalog/core.ts';
-import { parseList } from '../roster/parse.ts';
+import { parseList, DEFAULT_WARGEAR_NOTE } from '../roster/parse.ts';
 import { norm } from '../bsdata/parse.ts';
 import { DISPOSITIONS, detachmentsFor, MAX_DETACHMENTS } from '../select/selectionCore.ts';
 import { classifyInput } from '../select/runCore.ts';
@@ -8,6 +8,8 @@ import { classifyInput } from '../select/runCore.ts';
 export interface AutoFill {
   kind: 'list' | 'collection' | 'empty';
   format: string | null;
+  /** Source format for people: "New Recruit" / "40k app" / "BCP" (never the parser name). */
+  source: string | null;
   faction: string | null;
   /** Army as named in the page's army list, or null when the faction is not one of them. */
   army: string | null;
@@ -22,13 +24,13 @@ export interface AutoFill {
 const POINT_SIZES = [1000, 2000, 3000];
 
 export function autofillFromText(cat: CatalogIndex, text: string, armies: string[]): AutoFill {
-  const empty: AutoFill = { kind: 'empty', format: null, faction: null, army: null, detachments: [], disposition: null, points: null, warlord: null, notices: [] };
+  const empty: AutoFill = { kind: 'empty', format: null, source: null, faction: null, army: null, detachments: [], disposition: null, points: null, warlord: null, notices: [] };
   if (!text.trim()) return empty;
   if (classifyInput(text) === 'collection') return { ...empty, kind: 'collection', notices: ['Collection JSON: used as the owned-model caps; the fields are not changed.'] };
   const out: AutoFill = { ...empty, kind: 'list' };
   let r;
   try { r = parseList(text, { catalog: cat, sourceFile: 'pasted text' }); } catch (e) { out.notices.push(`Could not parse the list (${(e as Error).message}); fill the fields by hand.`); return out; }
-  out.format = r.format;
+  out.format = r.format; out.source = sourceLabel(r.format);
   // faction -> army: the most specific faction line that is one of the page's armies (chapter before "Space Marines")
   const lines = [...r.factionLines].reverse();
   out.faction = r.faction;
@@ -57,6 +59,18 @@ export function autofillFromText(cat: CatalogIndex, text: string, armies: string
   const wl = r.units.filter((u) => u.warlord);
   if (wl.length === 1) out.warlord = wl[0]!.name;
   else if (wl.length > 1) out.notices.push(`${wl.length} units marked Warlord (${wl.map((u) => u.name).join(', ')}); warlord left empty.`);
-  for (const w of r.warnings.filter((x) => !/^model count for/i.test(x)).slice(0, 3)) out.notices.push(`Parser: ${w}`);
+  // missing-wargear fallbacks are always shown (each names its unit); other parser notes capped at 3
+  for (const w of r.warnings.filter((x) => x.includes(DEFAULT_WARGEAR_NOTE))) out.notices.push(`Warning: ${w}`);
+  for (const w of r.warnings.filter((x) => !/^model count for/i.test(x) && !x.includes(DEFAULT_WARGEAR_NOTE)).slice(0, 3)) out.notices.push(`Parser: ${w}`);
   return out;
+}
+
+/** Roster format -> the app/site the text came from. */
+export function sourceLabel(format: string | null): string | null {
+  switch (format) {
+    case 'newrecruit-text': case 'newrecruit-markdown': case 'newrecruit-json': return 'New Recruit';
+    case 'gw-app': return '40k app';
+    case 'bcp': return 'BCP';
+    default: return null;
+  }
 }

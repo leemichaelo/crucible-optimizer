@@ -16,6 +16,7 @@ function int(s: string): number { return Number(s.replace(/,/g, '')); }
 export function detectFormat(text: string): RosterFormat {
   const t = text.trimStart();
   if (t.startsWith('{') || t.startsWith('[')) return 'newrecruit-json';
+  if (/^#\s*\+\+\s*Army Roster\s*\+\+/im.test(text) || (/^##\s*Configuration\s*$/im.test(text) && /\[\d+\s*pts\]/i.test(text))) return 'newrecruit-markdown';
   if (/^\s*(char\d+|\+\s*faction keyword|\+\+)/im.test(text) || /^\s*\d+x .+\(\d+ pts\):/im.test(text)) return 'newrecruit-text';
   if (/^Format inspected:|^CentAR|^ATTACHED UNITS$/m.test(text) || /\(\d[\d,]* Points\)/.test(text)) return 'bcp';
   if (/Exported with App Version|\(\d+ points\)/i.test(text)) return 'gw-app';
@@ -29,6 +30,7 @@ export function parseList(text: string, opts: ParseOptions = {}): Roster {
   let r: Roster;
   if (fmt === 'newrecruit-json') r = parseRosterJson(text);
   else if (fmt === 'newrecruit-text') r = parseNewRecruitText(text);
+  else if (fmt === 'newrecruit-markdown') r = parseNewRecruitMarkdown(text, opts.catalog);
   else r = parseGwText(text, fmt === 'unknown' ? 'gw-app' : fmt, opts.catalog);
   r.sourceFile = opts.sourceFile ?? null;
   for (const u of r.units) finalizeUnit(u, r, opts.catalog);
@@ -47,6 +49,43 @@ function finalizeUnit(u: RosterUnit, r: Roster, cat?: CatalogIndex): void {
     u.modelCount = entry ? entry.minModels : 1;
     if (!entry) r.warnings.push(`model count for "${u.name}" unknown (no model lines, not in catalog); assumed 1`);
   }
+  if (cat) fillDefaultWargear(u, r, cat);
+}
+
+/**
+ * Missing wargear (shorthand pastes, e.g. a Repulsor Executioner listed with only "Multi-melta"): when none of the BSData DEFAULT
+ * weapons of the datasheet appear in the paste, the BSData default wargear is added (pasted items kept) and a warning names the unit,
+ * so the unit is never scored as unarmed. HEURISTIC: assumes the shorthand omitted the default kit rather than swapping it.
+ */
+export const DEFAULT_WARGEAR_NOTE = 'BSData default wargear used';
+function fillDefaultWargear(u: RosterUnit, r: Roster, cat: CatalogIndex): void {
+  const e = cat.findUnit(u.name, cat.scope(r.faction ?? undefined));
+  if (!e || !e.defaultLoadout.length) return;
+  const wn = new Set(e.weapons.map((w) => norm(w.name.replace(/^➤\s*/, '').split(' - ')[0]!)));
+  const sing = (x: string) => x.replace(/s$/, '');
+  const ws = new Set([...wn].map(sing));
+  const isWeapon = (n: string) => wn.has(norm(n)) || ws.has(sing(norm(n))); // singular/plural tolerant ("Twin Killsaws" = "Twin Killsaw")
+  const defaults = [...new Set(e.defaultLoadout.flatMap((m) => m.wargear).filter(isWeapon))];
+  if (!defaults.length) return;
+  const pasted = [...u.unitWargear, ...u.models.flatMap((m) => m.wargear)].map((g) => norm(g.name));
+  if (defaults.some((d) => pasted.some((p) => sing(p) === sing(norm(d))))) return;
+  // pasted weapons that are not defaults (options swapped in or extras such as a hull Multi-melta): if they could stand in for the
+  // default kit (at least half as many), the paste is a full loadout with swaps, not shorthand
+  const pastedWeapons = new Set(pasted.filter(isWeapon).map(sing));
+  if (pastedWeapons.size * 2 >= defaults.length) return;
+  const added: string[] = [];
+  if (u.models.length && u.models.some((m) => m.wargear.length)) {
+    // multi-model unit: only model lines with no weapons get their BSData default line's weapons
+    for (const m of u.models) {
+      if (m.wargear.some((g) => isWeapon(g.name))) continue;
+      const d = e.defaultLoadout.find((x) => norm(x.model) === norm(m.name)) ?? e.defaultLoadout.find((x) => norm(m.name).includes(norm(x.model).replace(/s$/, ''))) ?? (e.defaultLoadout.length === 1 ? e.defaultLoadout[0] : undefined);
+      if (!d) continue;
+      for (const w of d.wargear.filter(isWeapon)) { m.wargear.push({ name: w, count: m.count }); added.push(w); }
+    }
+  } else {
+    for (const d of e.defaultLoadout) for (const w of d.wargear.filter(isWeapon)) { const n = e.defaultLoadout.length === 1 ? u.modelCount : d.count; const ex = u.unitWargear.find((g) => norm(g.name) === norm(w)); if (ex) ex.count = Math.max(ex.count, n); else u.unitWargear.push({ name: w, count: n }); added.push(w); }
+  }
+  if (added.length) r.warnings.push(`${u.name}: no BSData default weapons in the paste${pasted.length ? ` (only ${[...u.unitWargear, ...u.models.flatMap((m) => m.wargear)].filter((g) => !added.includes(g.name)).map((g) => g.name).join(', ')})` : ''}; ${DEFAULT_WARGEAR_NOTE}: ${[...new Set(added)].join(', ')} (HEURISTIC: shorthand assumed to omit the default kit)`);
 }
 
 // ---------------- GW / BCP text ----------------
@@ -231,6 +270,95 @@ function splitGear(s: string, models: number, u?: RosterUnit): WargearLine[] {
     else out.push({ name: part, count: models });
   }
   return out;
+}
+
+// ---------------- New Recruit markdown roster export ----------------
+// "Imperium - Adeptus Astartes - Black Templars - NAME - [2000 pts]" / "# ++ Army Roster ++ [...]" / "## Configuration" /
+// "Battle Size: Strike Force (2000 Point limit)" / "Detachment [3 Detachment Points]: A [1 Detachment Points], B [1], C [1]" /
+// "Force Disposition: Purge the Foe" / "## Section [N pts]" / "Unit [N pts]: gear, Enhancement (Upgrade) [10 pts], Warlord" /
+// "• Nx Model [5 pts]: gear [5 pts], Combo [5 pts] (Item, Item [5 pts])" / "  • Leading: X" "  • Supporting: X" "  • Led by: X"
+const NRM_UNIT = /^(?![•\-◦])(.+?)\s*\[(\d[\d,]*)\s*pts\]\s*:?\s*(.*)$/i;
+const stripPts = (s: string) => s.replace(/\s*\[\d[\d,]*\s*(?:pts|detachment points?)?\]\s*/gi, ' ').trim();
+
+export function parseNewRecruitMarkdown(text: string, cat?: CatalogIndex): Roster {
+  const r = baseRoster('newrecruit-markdown');
+  const lines = text.replace(/\r/g, '').split('\n');
+  let cur: RosterUnit | null = null;
+  let section: string | null = null;
+  let inConfig = false;
+  const enhOf = (name: string) => {
+    if (!cat) return undefined;
+    const dets = new Set(r.detachments.map(norm));
+    const hits = cat.cat.enhancements.filter((e) => norm(e.name) === norm(name));
+    return hits.find((e) => dets.has(norm(e.detachment))) ?? (dets.size ? undefined : hits[0]);
+  };
+  const gearList = (s: string, count: number, u: RosterUnit): WargearLine[] => {
+    const out: WargearLine[] = [];
+    for (let part of s.split(/,\s*(?![^()]*\))/)) {
+      const ptsM = part.match(/\[(\d+)\s*pts\]/i);
+      part = part.trim(); if (!part) continue;
+      if (/^warlord$/i.test(part)) { u.warlord = true; continue; }
+      // combo with its parts listed: "Thunder Hammer & Storm Shield [5 pts] (Storm Shield, Thunder Hammer [5 pts])" -> the parts
+      const sub = part.match(/^(.*?)\s*(?:\[[^\]]*\]\s*)?\(([^()]*)\)\s*$/);
+      if (sub && /,/.test(sub[2]!)) { out.push(...gearList(sub[2]!, count, u)); continue; }
+      const name = stripPts(part);
+      const en = enhOf(name);
+      if (en && !u.enhancement) { u.enhancement = en.name; u.enhancementPts = ptsM ? Number(ptsM[1]) : null; continue; }
+      const m = name.match(/^(\d+)x\s+(.+)$/i);
+      out.push(m ? { name: m[2]!.trim(), count: Number(m[1]) * Math.max(1, count) } : { name, count });
+    }
+    return out;
+  };
+  for (const raw of lines) {
+    const l = raw.trim();
+    if (!l || /^Created with/i.test(l)) continue;
+    let m: RegExpMatchArray | null;
+    if ((m = l.match(/^#\s*\+\+\s*Army Roster\s*\+\+\s*(?:\[(.*)\])?/i))) { const p = m[1]?.match(/(\d[\d,]*)\s*pts/i); if (p) r.declaredPoints = int(p[1]!); continue; }
+    if ((m = l.match(/^##\s*(.+?)\s*(?:\[[^\]]*\])?\s*$/))) { cur = null; inConfig = /^configuration$/i.test(m[1]!); section = inConfig ? null : m[1]!.toUpperCase(); continue; }
+    if (!r.factionLines.length && !cur && !section && !inConfig && / - /.test(l) && !/^#/.test(l)) {
+      // title: "<faction parts> - <roster name> - [2000 pts]"
+      const parts = l.split(/\s+-\s+/).map((x) => x.trim()).filter((x) => x && !/^\[.*\]$/.test(x));
+      const pm = l.match(/\[(\d[\d,]*)\s*pts\]/i); if (pm && r.declaredPoints === null) r.declaredPoints = int(pm[1]!);
+      if (parts.length >= 2) { r.name = parts[parts.length - 1]!; r.factionLines = parts.slice(0, -1); }
+      else r.factionLines = parts;
+      r.faction = r.factionLines[r.factionLines.length - 1] ?? null;
+      continue;
+    }
+    if (inConfig) {
+      if ((m = l.match(/^battle size:\s*(.+)$/i))) { const n = m[1]!.match(/\((\d[\d,]*)\s*point/i); r.battleSize = n ? `${m[1]!.replace(/\s*\(.*\)/, '').trim()} (${int(n[1]!)} points)` : m[1]!.trim(); continue; }
+      if ((m = l.match(/^detachments?\s*(?:\[[^\]]*\])?\s*:\s*(.+)$/i))) { r.detachments = m[1]!.split(/,\s*(?![^\[]*\])/).map((x) => stripPts(x)).filter(Boolean); continue; }
+      if ((m = l.match(/^force disposition:\s*(.+)$/i))) { r.mission = m[1]!.trim(); continue; }
+      continue;
+    }
+    if ((m = l.match(/^force disposition:\s*(.+)$/i))) { r.mission = m[1]!.trim(); continue; }
+    const bullet = /^[•\-◦]/.test(l);
+    const body = l.replace(/^[•\-◦]\s*/, '');
+    if (bullet && cur) {
+      if ((m = body.match(/^(leading|supporting):\s*(.+)$/i))) { cur.attachTarget = m[2]!.replace(/\[\d+\]\s*$/, '').trim(); cur.attachedAs = /leading/i.test(m[1]!) ? 'Leader' : 'Support'; continue; }
+      if (/^(led by|supported by):/i.test(body)) { if (!cur.attachedAs) cur.attachedAs = 'Bodyguard'; continue; }
+      if ((m = body.match(/^(\d+)x\s+(.+?)\s*(?:\[[^\]]*\])?\s*(?::\s*(.*))?$/))) {
+        const n = Number(m[1]); const u = cur;
+        u.models.push({ name: m[2]!.trim(), count: n, wargear: gearList(m[3] ?? '', n, u) });
+        continue;
+      }
+      r.warnings.push(`unparsed line in ${cur.name}: "${l}"`); continue;
+    }
+    if ((m = l.match(NRM_UNIT))) {
+      cur = emptyUnit(m[1]!.replace(/\[\d+\]\s*$/, '').trim(), int(m[2]!)); cur.section = section;
+      cur.unitWargear = gearList(m[3] ?? '', 1, cur);
+      r.units.push(cur);
+      continue;
+    }
+    if (!/^#/.test(l)) r.warnings.push(`unparsed line: "${l}"`);
+  }
+  // a unit line with its own gear AND model lines (e.g. "Chaplain Grimaldus [120 pts]: Artificer Crozius, Plasma Pistol" + "3x Cenobyte
+  // Servitor"): the unit line is the named model itself when BSData has a model of that name
+  if (cat) for (const u of r.units) if (u.models.length && u.unitWargear.length) {
+    const e = cat.findUnit(u.name, cat.scope(r.faction ?? undefined));
+    const mn = e?.modelNames.find((n) => norm(n) === norm(u.name));
+    if (mn) { u.models.unshift({ name: mn, count: 1, wargear: u.unitWargear }); u.unitWargear = []; }
+  }
+  return r;
 }
 
 // ---------------- New Recruit / BattleScribe roster JSON ----------------

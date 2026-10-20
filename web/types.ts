@@ -6,4 +6,6 @@ export interface RunRequest {
   points: number;
   /** Warlord (auto-filled from a pasted list or typed): locked into every list and made WARLORD. Empty = heuristic pick. */
   warlord: string;
+  /** Datasheets never fielded (exact BSData names; checkboxes / saved preset). */
+  exclude: string[];
 }
