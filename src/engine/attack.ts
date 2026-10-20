@@ -284,7 +284,8 @@ export { point };
 export function quickEV(weapons: EngineWeapon[], def: Defender, mods: Modifiers): number {
   const notes = new Set<string>();
   let total = 0;
-  const g0 = def.groups.find((g) => !g.character) ?? def.groups[0]!;
+  const g0 = def.groups.find((g) => !g.character) ?? def.groups[0];
+  if (!g0) return 0;
   for (const w of weapons) {
     const r = resolveWeapon(w, def, mods, notes);
     const A = mean(r.attacksPerCopy) * w.copies;

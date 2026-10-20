@@ -40,7 +40,10 @@ export class CatalogIndex {
   }
 
   findUnit(name: string, scope: string[] = []): UnitEntry | undefined {
-    const cands = this.byNorm.get(norm(name)) ?? this.byNorm.get(norm(name).replace(/s$/, '')) ?? this.fuzzy(name);
+    let cands = this.byNorm.get(norm(name)) ?? this.byNorm.get(norm(name).replace(/s$/, '')) ?? this.fuzzy(name);
+    // 40k App names Terminator-armour characters "Terminator <X>"; BSData names the datasheet "<X> in Terminator Armour".
+    const ta = norm(name).match(/^terminator (.+)$/);
+    if (!cands.length && ta) cands = this.byNorm.get(norm(`${ta[1]} in Terminator Armour`)) ?? [];
     if (!cands.length) return undefined;
     if (scope.length) {
       // prefer the first scope catalogue (the faction itself) over imports

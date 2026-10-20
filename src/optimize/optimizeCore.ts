@@ -97,7 +97,8 @@ export function opponentsFromTexts(cat: CatalogIndex, sources: SourceText[], not
 }
 
 function unitPts(cat: CatalogIndex, scope: string[], u: RosterUnit): number {
-  const e = cat.findUnit(u.name, scope)!;
+  const e = cat.findUnit(u.name, scope);
+  if (!e) return 0; // not in BSData: no points invented (warned where the roster is loaded)
   const base = pointsFor(e, u.modelCount, (child) => u.models.filter((m) => norm(m.name).includes(norm(child).replace(/s$/, ''))).reduce((a, m) => a + m.count, 0)) ?? 0;
   return base + (e.wargearPts.length ? wargearCost(u, e.wargearPts) : 0);
 }
@@ -292,6 +293,7 @@ export function optimizeCore(cat: CatalogIndex, col: Collection, data: OptimizeD
   const backOf = (b: Block): number[] => {
     let v = backMemo.get(b.cellKey); if (v) return v;
     const def = buildDefender(b.units, cat, scope, notes, 'melee');
+    if (!def.groups.length) { notes.warnings.push(`points at risk: ${b.label} has no BSData defender profile; scored as 0`); v = opp.units.map(() => 0); backMemo.set(b.cellKey, v); return v; }
     const me: OppUnit = { id: `us:${b.cellKey}`, list: 'us', label: b.label, pts: b.pts, def, models: def.groups.reduce((s, x) => s + x.count, 0) };
     v = opp.units.map((u) => {
       if (!u.attacker) return 0;
@@ -607,6 +609,7 @@ export function optimizeCore(cat: CatalogIndex, col: Collection, data: OptimizeD
   // ---- baselines: given lists scored on the same metric (no search) ----
   const baselines = (data.baselines ?? []).map(({ file: f, text }) => {
     const r = parseList(text, { catalog: cat, sourceFile: f });
+    for (const u of r.units) if (!cat.findUnit(u.name, scope)) notes.warnings.push(`baseline ${f}: "${u.name}" not in BSData; scored without its profile and points`);
     const wo = (o.baselineWarlords ?? []).find((w) => f.endsWith(w.file));
     let warlordSource = r.units.some((u) => u.warlord) ? 'parsed from list' : 'none in list';
     if (wo) { const t = r.units.find((u) => norm(u.name) === norm(wo.name)); if (!t) throw new Error(`--warlord: ${wo.name} not in ${f}`); for (const u of r.units) u.warlord = u === t; warlordSource = `--warlord override (${wo.name})`; }
